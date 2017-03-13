@@ -2,6 +2,7 @@
 #include "ui_customtabforimage.h"
 #include "tools/brightness.h"
 #include "tools/contrast.h"
+#include "tools/negative.h"
 #include <QGraphicsView>
 #include <QMessageBox>
 #include <QImageReader>
@@ -99,6 +100,12 @@ Tool *CustomTabForImage::createTool(int index)
         break;
     case 2:
         return new Contrast(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+        break;
+    case 3:
+        return new Negative(originalGrahpicImage->width(),
                               originalGrahpicImage->height(),
                               originalGrahpicImage->depth(),
                               this);

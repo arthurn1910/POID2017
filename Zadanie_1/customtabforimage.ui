@@ -157,6 +157,11 @@
      <string>Kontrast</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>Negatyw</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="toolsLabel">
    <property name="geometry">

@@ -28,15 +28,18 @@ SOURCES += main.cpp\
     tools/tool.cpp \
     tools/brightness.cpp \
     customtabforimage.cpp \
-    tools/contrast.cpp
+    tools/contrast.cpp \
+    tools/negative.cpp
 
 HEADERS  += mainwindow.h \
     tools/tool.h \
     tools/brightness.h \
     customtabforimage.h \
-    tools/contrast.h
+    tools/contrast.h \
+    tools/negative.h
 
 FORMS    += mainwindow.ui \
     customtabforimage.ui \
     tools/brightness.ui \
-    tools/contrast.ui
+    tools/contrast.ui \
+    tools/negative.ui

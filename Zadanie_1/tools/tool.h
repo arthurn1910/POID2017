@@ -12,7 +12,6 @@ public:
     ~Tool();
 
     virtual QImage* process(QImage *photoData) = 0;
-    virtual void setDefaultParameters() = 0;
 
 protected:
     const int WIDTH;
