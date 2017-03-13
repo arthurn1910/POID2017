@@ -1,28 +1,27 @@
-#include "brightness.h"
-#include "ui_brightness.h"
+#include "contrast.h"
+#include "ui_contrast.h"
 
-Brightness::Brightness(QWidget *parent) :
+Contrast::Contrast(QWidget *parent) :
     Tool(parent),
-    ui(new Ui::Brightness)
+    ui(new Ui::Contrast)
 {
     ui->setupUi(this);
 }
 
-Brightness::Brightness(int width, int height, int depth, QWidget *parent) :
+Contrast::Contrast(int width, int height, int depth, QWidget *parent) :
     Tool(width, height, depth, parent),
-    ui(new Ui::Brightness)
+    ui(new Ui::Contrast)
 {
     ui->setupUi(this);
     slider = ui->slider;
 }
 
-Brightness::~Brightness()
+Contrast::~Contrast()
 {
     delete ui;
 }
 
-#include <iostream>
-QImage *Brightness::process(QImage *image)
+QImage *Contrast::process(QImage *image)
 {
     updateLookUpTable();
     QImage *newImage;
@@ -70,30 +69,33 @@ QImage *Brightness::process(QImage *image)
     return newImage;
 }
 
-void Brightness::setDefaultParameters()
+void Contrast::setDefaultParameters()
 {
     slider->setValue(0);
 }
 
-int Brightness::getBrightnessLevel()
+int Contrast::getContrastLevel()
 {
     return slider->value();
 }
 
-void Brightness::updateLookUpTable()
+void Contrast::updateLookUpTable()
 {
-    int brightnessLevel = getBrightnessLevel();
+    double contrastLevel = getContrastLevel();
+    contrastLevel = 1 + contrastLevel / 256.0;
 
     for (int i = 0; i < LOOK_UP_TABLE_SIZE; i++)
     {
-        if (i + brightnessLevel < 0)
+        int pixelValue = contrastLevel * (i - 127) + 127;
+        if (pixelValue < 0)
         {
             lookUpTable[i] = (uchar) 0;
-        } else if (i + brightnessLevel > 255)
+        } else if (pixelValue > 255)
         {
             lookUpTable[i] = (uchar) 255;
         } else {
-            lookUpTable[i] = (uchar) (i + brightnessLevel);
+            lookUpTable[i] = (uchar) pixelValue;
         }
     }
 }
+
