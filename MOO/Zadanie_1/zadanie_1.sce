@@ -4,7 +4,7 @@ f=figure('figure_position',[473,209],'figure_size',[360,384],'auto_resize','on',
 //////////
 handles.dummy = 0;
 
-handles.expresionLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.9,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Funkcja f(X)','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','expresionLabel','Callback','')
+handles.expresionLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.9,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Funkcja f(X):','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','expresionLabel','Callback','')
 handles.expresionValue=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.25,0.9,0.4,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','expresionValue','Callback','')
 
 handles.rangeLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.8,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Przedział X:','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeLabel','Callback','')
@@ -32,41 +32,46 @@ f.visible = "on";
 //////////
 // Callbacks are defined as below. Please do not delete the comments as it will be used in coming version
 //////////
+currentDirectory = get_absolute_file_path("zadanie_1.sce");
+exec(currentDirectory + "\utils.sce");
+exec(currentDirectory + "\bisection.sce");
+exec(currentDirectory + "\golden_section.sce");
+exec(currentDirectory + "\unimod_test.sce");
 
 function processButton_callback(handles)
 //Write your callback for  processButton  here
-stringEquation = handles.expresionValue.string;
-stringEquation = convstr(stringEquation, "l");
-
-rangeMin = strtod(handles.rangeMin.string);
-rangeMax = strtod(handles.rangeMax.string);
-
-maxIterations = strtod(handles.maxIterationsValue.string);
-precision = strtod(handles.precisionValue.string);
-
-useMethodBisection = handles.methodBisection.value;
-useMethodGoldenSection = handles.methodGoldenSection.value;
-
-handles.assertLabel.visible = "off"
-handles.assertErrors.visible = "off"
-[validInput, errorStrings] = assertInputData(stringEquation, rangeMin, rangeMax, useMethodBisection, useMethodGoldenSection, maxIterations, precision);
-
-if ~validInput then
-    handles.assertLabel.visible = "on"
-    handles.assertErrors.visible = "on"
-    handles.assertErrors.string = errorStrings;
-    return;
-end
-
-if testIfUnimodalFunction(stringEquation, rangeMin, rangeMax) then
-    [rangeMin, rangeMax] = designateNewRangeForUnimodalFunction(stringEquation, rangeMin, rangeMax);
-end
-
-if useMethodBisection then
-    bisection(stringEquation, rangeMin, rangeMax);
-else
-    goldenSection(stringEquation, rangeMin, rangeMax);
-end
+    stringEquation = handles.expresionValue.string;
+    stringEquation = convstr(stringEquation, "l");
+    
+    rangeMin = strtod(handles.rangeMin.string);
+    rangeMax = strtod(handles.rangeMax.string);
+    
+    maxIterations = strtod(handles.maxIterationsValue.string);
+    precision = strtod(handles.precisionValue.string);
+    
+    useMethodBisection = handles.methodBisection.value;
+    useMethodGoldenSection = handles.methodGoldenSection.value;
+    
+    handles.assertLabel.visible = "off"
+    handles.assertErrors.visible = "off"
+    [validInput, errorStrings] = assertInputData(stringEquation, rangeMin, rangeMax, useMethodBisection, useMethodGoldenSection, maxIterations, precision);
+    
+    if ~validInput then
+        handles.assertLabel.visible = "on"
+        handles.assertErrors.visible = "on"
+        handles.assertErrors.string = errorStrings;
+        return;
+    end
+    
+    if testIfUnimodalFunction(stringEquation, rangeMin, rangeMax) then
+        [rangeMin, rangeMax] = designateNewRangeForUnimodalFunction(stringEquation, rangeMin, rangeMax);
+    end
+    
+    if useMethodBisection then
+        bisection(stringEquation, rangeMin, rangeMax);
+    else
+        goldenSection(stringEquation, rangeMin, rangeMax);
+    end
 
 endfunction
 
