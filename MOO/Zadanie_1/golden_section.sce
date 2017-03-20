@@ -65,5 +65,5 @@ function [y, currentIteration, currentRange]=goldenSection(equation, rangeMin, r
     end
      mprintf("Ostateczny osiągnięty przedział: %f, %f \n",currentRangeMin, currentRangeMax); 
     mprintf("Środek przedziału: %f\n",(currentRangeMin + currentRangeMax)/2);
-    mprintf("Bład +- %f\n",(currentRangeMin + currentRangeMax)/2);
+    mprintf("Bład +- %f\n",((currentRangeMin + currentRangeMax)/2)-currentRangeMin);
 endfunction
