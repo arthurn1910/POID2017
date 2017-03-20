@@ -68,9 +68,9 @@ function processButton_callback(handles)
     end
     
     if useMethodBisection then
-        bisection(stringEquation, rangeMin, rangeMax);
+        bisection(stringEquation, rangeMin, rangeMax,maxIterations,precision);
     else
-        goldenSection(stringEquation, rangeMin, rangeMax);
+        goldenSection(stringEquation, rangeMin, rangeMax,maxIterations,precision);
     end
 
 endfunction
