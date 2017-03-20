@@ -6,15 +6,16 @@ function [y, currentIteration, currentRange]=goldenSection(equation, rangeMin, r
     k=(sqrt(5)-1)/2;
     
     range=rangeMax-rangeMin;
-    delta=range/8;
+    delta=range/6;
     
     scf();
-    x=rangeMin:rangeMax;
+    x=[rangeMin:0.1:rangeMax];
+    disp(equation);
     plot(x,eval(equation),'r');
     title(equation);
     xlabel('x'); ylabel('y');
     
-    for i=0:6
+    for i=0:4
         u0=rangeMin+i*delta;
         u1=rangeMin+i*delta+delta;
         u2=rangeMin++i*delta+2*delta;

@@ -8,7 +8,7 @@ function [y, currentIteration, currentRange]=bisection(equation, rangeMin, range
     delta=range/8;
     
     scf();
-    x=rangeMin:rangeMax;
+    x=[rangeMin:0.1:rangeMax];
     plot(x,eval(equation),'r');
     title(equation);
     xlabel('x'); ylabel('y');
