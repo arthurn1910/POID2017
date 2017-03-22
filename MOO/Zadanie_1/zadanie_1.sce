@@ -63,9 +63,9 @@ function processButton_callback(handles)
         return;
     end
     
-    if testIfUnimodalFunction(stringEquation, rangeMin, rangeMax) then
-        [rangeMin, rangeMax] = designateNewRangeForUnimodalFunction(stringEquation, rangeMin, rangeMax);
-    end
+    //if testIfUnimodalFunction(stringEquation, rangeMin, rangeMax) then
+    //    [rangeMin, rangeMax] = designateNewRangeForUnimodalFunction(stringEquation, rangeMin, rangeMax);
+    //end
     
     if useMethodBisection then
         bisection(stringEquation, rangeMin, rangeMax,maxIterations,precision);

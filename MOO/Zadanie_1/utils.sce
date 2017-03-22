@@ -12,8 +12,8 @@ function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeMin, ra
     end
     
     if (~isempty(containsOtherThenX)) then
-        valid = %f;
-        errorStringMatrix = [errorStringMatrix, "Funkcja zawiera zmienne inne niż X."];
+        //valid = %f;
+        //errorStringMatrix = [errorStringMatrix, "Funkcja zawiera zmienne inne niż X."];
     end
     
     // Assertion of 'rangeMin'
