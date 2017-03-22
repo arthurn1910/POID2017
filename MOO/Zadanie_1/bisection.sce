@@ -16,16 +16,23 @@ function bisection(equation, rangeMin, rangeMax,maxIterations,precision)
     plot(x,eval(equation),'r');
     title(equation);
     xlabel('x'); ylabel('y');
+    
     for i=0:6
+        // lewa strona
         u0=rangeMin+i*delta;
-        u1=rangeMin+i*delta+delta;
-        u2=rangeMin++i*delta+2*delta;
         x=u0;
         fu0=evstr(equation);
+        
+        // środek
+        u1=rangeMin+(i+1)*delta;
         x=u1;
         fu1=evstr(equation);
+        
+        // prawa strona
+        u2=rangeMin+(i+2)*delta;        
         x=u2;
         fu2=evstr(equation);
+        
         if((fu0>=fu1) & (fu1<=fu2)) then
            currentRangeMin=u0;
            currentRangeMax=u2;
@@ -33,7 +40,6 @@ function bisection(equation, rangeMin, rangeMax,maxIterations,precision)
            plot(currentRangeMax,0.1,'co');
            break; 
         end
-        
     end
     mprintf("Przedzial unimodalny: %f, %f \n",currentRangeMin, currentRangeMax);    
     
@@ -46,20 +52,28 @@ function bisection(equation, rangeMin, rangeMax,maxIterations,precision)
                plot(currentRangeMax,0.25*currentIteration,'o');
             end 
             L=(currentRangeMax-currentRangeMin)/4;
-            x0=currentRangeMin+2*L;
-            x1=currentRangeMin+L;
-            x2=currentRangeMin+3*L;
-            x=x0;
-            f0=evstr(equation);
+            
+            // lewa ćwiartka
+            x1=currentRangeMin+L; 
             x=x1;
             f1=evstr(equation);
+            
+            // środek przedziału
+            x0=currentRangeMin+2*L;
+            x=x0;
+            f0=evstr(equation);
+            
+            // prawa ćwiartka
+            x2=currentRangeMin+3*L;
             x=x2;
             f2=evstr(equation);
             
             if((f1<f0) & (f0<f2)) then
+                // przesuwamy się w lewo
                 currentRangeMax=x0;
                 x0=x1;
-            else 
+            else
+                // przesuwamy się w prawo
                 currentRangeMin=x0;
                 x0=x2;
             end 

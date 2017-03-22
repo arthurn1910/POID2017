@@ -11,7 +11,7 @@ function goldenSection(equation, rangeMin, rangeMax, maxIterations, minRange)
     mprintf("Max iteracji: %i, Dokładność: %f.\n", maxIterations, precision);
 
     range=rangeMax-rangeMin;
-    delta=range/6;
+    delta=range/8;
     
     scf();
     x=[rangeMin:0.1:rangeMax];
@@ -21,15 +21,21 @@ function goldenSection(equation, rangeMin, rangeMax, maxIterations, minRange)
     xlabel('x'); ylabel('y');
     
     for i=0:6
+        // lewa strona
         u0=rangeMin+i*delta;
-        u1=rangeMin+i*delta+delta;
-        u2=rangeMin++i*delta+2*delta;
         x=u0;
         fu0=evstr(equation);
+        
+        // środek
+        u1=rangeMin+(i+1)*delta;
         x=u1;
         fu1=evstr(equation);
+        
+        // prawa strona
+        u2=rangeMin+(i+2)*delta;        
         x=u2;
         fu2=evstr(equation);
+        
         if((fu0>=fu1) & (fu1<=fu2)) then
            currentRangeMin=u0;
            currentRangeMax=u2;
@@ -38,7 +44,7 @@ function goldenSection(equation, rangeMin, rangeMax, maxIterations, minRange)
            break; 
         end
     end
-    mprintf("przedzial unimodalny: %f, %f \n",currentRangeMin, currentRangeMax); 
+    mprintf("Przedzial unimodalny: %f, %f \n",currentRangeMin, currentRangeMax); 
     
     x1 = currentRangeMax - k*(currentRangeMax - currentRangeMin);
     x2 = currentRangeMin + k*(currentRangeMax - currentRangeMin);

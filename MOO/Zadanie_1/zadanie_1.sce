@@ -36,7 +36,6 @@ currentDirectory = get_absolute_file_path("zadanie_1.sce");
 exec(currentDirectory + "\utils.sce");
 exec(currentDirectory + "\bisection.sce");
 exec(currentDirectory + "\golden_section.sce");
-exec(currentDirectory + "\unimod_test.sce");
 
 function processButton_callback(handles)
 //Write your callback for  processButton  here
