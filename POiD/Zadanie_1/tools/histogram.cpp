@@ -24,7 +24,6 @@ Histogram::Histogram(int width, int height, int depth, QWidget *parent) :
     ui(new Ui::Histogram)
 {
     ui->setupUi(this);
-    consoleValue = ui->consoleValue;
 }
 
 Histogram::~Histogram()
@@ -35,6 +34,7 @@ Histogram::~Histogram()
 }
 
 #include <cmath>
+#include <iostream>
 QImage *Histogram::process(QImage *image)
 {
     QImage *newImage = new QImage(*image);
@@ -58,8 +58,11 @@ QImage *Histogram::process(QImage *image)
             for (int j = 0; j <= i; j++) {
                 suma += oldHistogramTab[j];
             }
-            // daje minusy... lol
-            colors[i] = std::sqrt(-2 * alpha * alpha * (1.0 / std::log(suma / (WIDTH * HEIGHT))));
+            if (suma == 0) {
+                suma = 1;
+            }
+
+            colors[i] = std::sqrt(2 * alpha * alpha * (std::log((WIDTH * HEIGHT) / suma)));
 //            if (colors[i] > max) {
 //                max = colors[i];
 //            }
@@ -71,6 +74,7 @@ QImage *Histogram::process(QImage *image)
             }
         }
 //        if (max > 255 || min < 0) {
+//            std::cout << "tak " << max << " " << min << "\n";
 //            for (int i = 0; i < 256; i++) {
 //                colors[i] = (colors[i] - min) * 255.0 / (max - min);
 //            }
