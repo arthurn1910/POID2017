@@ -162,6 +162,31 @@
      <string>Negatyw</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>Filtr - średnia</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Filtr - mediana</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Histogram</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Filtr liniowy - splot</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Filtr Sobel</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="toolsLabel">
    <property name="geometry">

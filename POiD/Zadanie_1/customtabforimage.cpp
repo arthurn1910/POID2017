@@ -3,6 +3,11 @@
 #include "tools/brightness.h"
 #include "tools/contrast.h"
 #include "tools/negative.h"
+#include "tools/filtr_mean.h"
+#include "tools/filtr_median.h"
+#include "tools/histogram.h"
+#include "tools/filtr_linear_splot.h"
+#include "tools/filtr_sobel.h"
 #include <QGraphicsView>
 #include <QMessageBox>
 #include <QImageReader>
@@ -106,6 +111,32 @@ Tool *CustomTabForImage::createTool(int index)
         break;
     case 3:
         return new Negative(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+        break;
+    case 4:
+        return new FiltrMean(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+    case 5:
+        return new FiltrMedian(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+    case 6:
+        return new Histogram(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+    case 7:
+        return new FiltrLinearSplot(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+    case 8:
+        return new FiltrSobel(originalGrahpicImage->width(),
                               originalGrahpicImage->height(),
                               originalGrahpicImage->depth(),
                               this);

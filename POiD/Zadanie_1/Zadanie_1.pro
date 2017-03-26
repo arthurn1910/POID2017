@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,17 +29,34 @@ SOURCES += main.cpp\
     tools/brightness.cpp \
     customtabforimage.cpp \
     tools/contrast.cpp \
-    tools/negative.cpp
+    tools/negative.cpp \
+    tools/filtr_mean.cpp \
+    tools/filtr_median.cpp \
+    tools/utils.cpp \
+    tools/histogram.cpp \
+    tools/filtr_linear_splot.cpp \
+    tools/filtr_sobel.cpp
 
 HEADERS  += mainwindow.h \
     tools/tool.h \
     tools/brightness.h \
     customtabforimage.h \
     tools/contrast.h \
-    tools/negative.h
+    tools/negative.h \
+    tools/filtr_mean.h \
+    tools/filtr_median.h \
+    tools/utils.h \
+    tools/histogram.h \
+    tools/filtr_linear_splot.h \
+    tools/filtr_sobel.h
 
 FORMS    += mainwindow.ui \
     customtabforimage.ui \
     tools/brightness.ui \
     tools/contrast.ui \
-    tools/negative.ui
+    tools/negative.ui \
+    tools/filtr_mean.ui \
+    tools/filtr_median.ui \
+    tools/histogram.ui \
+    tools/filtr_linear_splot.ui \
+    tools/filtr_sobel.ui

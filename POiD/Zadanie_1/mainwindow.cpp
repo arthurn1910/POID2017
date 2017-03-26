@@ -89,7 +89,6 @@ QString MainWindow::selectNewFile()
     } else {
         return NULL;
     }
-
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
