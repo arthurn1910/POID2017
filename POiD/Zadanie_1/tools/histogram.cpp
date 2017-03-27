@@ -103,7 +103,7 @@ QImage *Histogram::process(QImage *image)
 QT_CHARTS_USE_NAMESPACE
 void Histogram::showOldHistogramChart(int *histogramTab)
 {
-    QBarSet *histogramSet = new QBarSet("Histogram");
+    QBarSet *histogramSet = new QBarSet("Jasność pixeli");
 
     for (int i = 0; i < 256; i++) {
         *histogramSet << histogramTab[i];

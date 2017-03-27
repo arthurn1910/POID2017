@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include "tool.h"
+#include <QFileDialog>
 
 namespace Ui {
 class FiltrMedian;
@@ -11,6 +12,7 @@ class FiltrMedian;
 
 class FiltrMedian : public Tool
 {
+    Q_OBJECT
 public:
     explicit FiltrMedian(QWidget *parent = 0);
     explicit FiltrMedian(int width, int height, int depth, QWidget *parent = 0);
@@ -24,6 +26,10 @@ private slots:
 private:
     int getWidthOfMaskSize();
     int getHeightOfMaskSize();
+    void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode);
+    QString selectOriginalFile();
+    double calculateErrorFor8BitImage(QImage *original, QImage *other);
+    double *calculateErrorFor32BitImage(QImage *original, QImage *other);
 
     QImage *processedImage;
     QImage *inputImage;

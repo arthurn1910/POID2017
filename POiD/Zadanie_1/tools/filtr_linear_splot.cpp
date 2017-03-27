@@ -78,6 +78,9 @@ QImage *FiltrLinearSplot::process(QImage *image)
             }
         }
         newImage = new QImage(processedData, WIDTH, HEIGHT, image->bytesPerLine(), image->format());
+        for (int i = 0; i < 256; i++) {
+            newImage->setColor(i, qRgb(i, i, i));
+        }
     } else {
         // Obrazy 24 bitowe czyta jako 32...
 
