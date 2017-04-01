@@ -1,13 +1,14 @@
 #include "customtabforimage.h"
 #include "ui_customtabforimage.h"
-#include "tools/brightness.h"
-#include "tools/contrast.h"
-#include "tools/negative.h"
-#include "tools/filtr_mean.h"
-#include "tools/filtr_median.h"
-#include "tools/histogram.h"
-#include "tools/filtr_linear_splot.h"
-#include "tools/filtr_sobel.h"
+#include "tools/zadanie1/brightness.h"
+#include "tools/zadanie1/contrast.h"
+#include "tools/zadanie1/negative.h"
+#include "tools/zadanie1/filtr_mean.h"
+#include "tools/zadanie1/filtr_median.h"
+#include "tools/zadanie1/histogram.h"
+#include "tools/zadanie1/filtr_linear_splot.h"
+#include "tools/zadanie1/filtr_sobel.h"
+#include "tools/zadanie2/low_pass_filter.h"
 #include <QGraphicsView>
 #include <QMessageBox>
 #include <QImageReader>
@@ -137,6 +138,12 @@ Tool *CustomTabForImage::createTool(int index)
                               this);
     case 8:
         return new FiltrSobel(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+        break;
+    case 9:
+        return new LowPassFilter(originalGrahpicImage->width(),
                               originalGrahpicImage->height(),
                               originalGrahpicImage->depth(),
                               this);

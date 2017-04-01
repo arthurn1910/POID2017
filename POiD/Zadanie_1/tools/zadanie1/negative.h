@@ -1,7 +1,7 @@
 #ifndef Negative_H
 #define Negative_H
 
-#include "tool.h"
+#include "../tool.h"
 #include <QWidget>
 #include <QSlider>
 

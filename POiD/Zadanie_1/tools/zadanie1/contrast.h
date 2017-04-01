@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QSlider>
-#include "tool.h"
+#include "../tool.h"
 
 namespace Ui {
 class Contrast;

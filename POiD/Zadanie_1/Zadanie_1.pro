@@ -26,37 +26,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     tools/tool.cpp \
-    tools/brightness.cpp \
     customtabforimage.cpp \
-    tools/contrast.cpp \
-    tools/negative.cpp \
-    tools/filtr_mean.cpp \
-    tools/filtr_median.cpp \
+    tools/zadanie1/brightness.cpp \
+    tools/zadanie1/contrast.cpp \
+    tools/zadanie1/filtr_linear_splot.cpp \
+    tools/zadanie1/filtr_mean.cpp \
+    tools/zadanie1/filtr_median.cpp \
+    tools/zadanie1/filtr_sobel.cpp \
+    tools/zadanie1/histogram.cpp \
+    tools/zadanie1/negative.cpp \
+    tools/tool_fourier.cpp \
     tools/utils.cpp \
-    tools/histogram.cpp \
-    tools/filtr_linear_splot.cpp \
-    tools/filtr_sobel.cpp
+    tools/zadanie2/low_pass_filter.cpp
 
 HEADERS  += mainwindow.h \
     tools/tool.h \
-    tools/brightness.h \
-    customtabforimage.h \
-    tools/contrast.h \
-    tools/negative.h \
-    tools/filtr_mean.h \
-    tools/filtr_median.h \
+    customtabforimage.h \ 
+    tools/zadanie1/brightness.h \
+    tools/zadanie1/contrast.h \
+    tools/zadanie1/filtr_linear_splot.h \
+    tools/zadanie1/filtr_mean.h \
+    tools/zadanie1/filtr_median.h \
+    tools/zadanie1/filtr_sobel.h \
+    tools/zadanie1/histogram.h \
+    tools/zadanie1/negative.h \
+    tools/tool_fourier.h \
     tools/utils.h \
-    tools/histogram.h \
-    tools/filtr_linear_splot.h \
-    tools/filtr_sobel.h
+    tools/zadanie2/low_pass_filter.h
 
 FORMS    += mainwindow.ui \
     customtabforimage.ui \
-    tools/brightness.ui \
-    tools/contrast.ui \
-    tools/negative.ui \
-    tools/filtr_mean.ui \
-    tools/filtr_median.ui \
-    tools/histogram.ui \
-    tools/filtr_linear_splot.ui \
-    tools/filtr_sobel.ui
+    tools/zadanie1/brightness.ui \
+    tools/zadanie1/contrast.ui \
+    tools/zadanie1/filtr_linear_splot.ui \
+    tools/zadanie1/filtr_mean.ui \
+    tools/zadanie1/filtr_median.ui \
+    tools/zadanie1/filtr_sobel.ui \
+    tools/zadanie1/histogram.ui \
+    tools/zadanie1/negative.ui \
+    tools/zadanie2/low_pass_filter.ui

@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QtCharts/QChartView>
-#include "tool.h"
+#include "../tool.h"
 
 QT_CHARTS_USE_NAMESPACE
 

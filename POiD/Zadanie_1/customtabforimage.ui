@@ -187,6 +187,11 @@
      <string>Filtr Sobel</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>Filtr dolnoprzepustowy</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="toolsLabel">
    <property name="geometry">

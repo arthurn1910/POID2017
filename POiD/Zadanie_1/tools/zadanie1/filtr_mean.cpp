@@ -1,29 +1,26 @@
-#include "filtr_median.h"
-#include "ui_filtr_median.h"
-#include <vector>
-#include <algorithm>
-#include "utils.h"
+#include "filtr_mean.h"
+#include "ui_filtr_mean.h"
 
-FiltrMedian::FiltrMedian(QWidget *parent) :
+FiltrMean::FiltrMean(QWidget *parent) :
     Tool(parent),
-    ui(new Ui::FiltrMedian)
+    ui(new Ui::FiltrMean)
 {
     ui->setupUi(this);
 }
 
-FiltrMedian::FiltrMedian(int width, int height, int depth, QWidget *parent) :
+FiltrMean::FiltrMean(int width, int height, int depth, QWidget *parent) :
     Tool(width, height, depth, parent),
-    ui(new Ui::FiltrMedian)
+    ui(new Ui::FiltrMean)
 {
     ui->setupUi(this);
 }
 
-FiltrMedian::~FiltrMedian()
+FiltrMean::~FiltrMean()
 {
     delete ui;
 }
 
-QImage *FiltrMedian::process(QImage *image)
+QImage *FiltrMean::process(QImage *image)
 {
     inputImage = image;
 
@@ -31,11 +28,9 @@ QImage *FiltrMedian::process(QImage *image)
     const int maskHeight = getHeightOfMaskSize();
 
     int maskPixelCount = 0;
-    int sumOfSurroundingPixels = 0;
-
 
     if (DEPTH == 8) {
-        std::vector<int> pixelsInMaskVector;
+        int sumOfSurroundingPixels = 0;
         const uchar *photoData = image->bits();
         uchar *processedData = new uchar[WIDTH * HEIGHT];
 
@@ -48,21 +43,13 @@ QImage *FiltrMedian::process(QImage *image)
                 }
                 sumOfSurroundingPixels = 0;
                 maskPixelCount = 0;
-                pixelsInMaskVector.clear();
                 for (int m = -maskHeight; m <= maskHeight; m++) {
-                    for (int n = -maskWidth; n <= maskWidth; n++) {                        
-                        pixelsInMaskVector.push_back(photoData[(i+m) * HEIGHT + (j+n)]);
+                    for (int n = -maskWidth; n <= maskWidth; n++) {
+                        sumOfSurroundingPixels += photoData[(i+m) * HEIGHT + (j+n)];
                         maskPixelCount++;
                     }
                 }
-                // Slow ~1500-2000 nanoseconds
-                //std::nth_element(pixelsInMaskVector.begin(), pixelsInMaskVector.begin()+(maskPixelCount / 2), pixelsInMaskVector.end());
-                //processedData[i * HEIGHT + j] = (uchar) pixelsInMaskVector[maskPixelCount / 2];
-
-                // Fast ~500-900 nanoseconds
-                int *temp = &pixelsInMaskVector[0];
-                int median = heapMedian3(temp, maskPixelCount);
-                processedData[i * HEIGHT + j] = (uchar) median;
+                processedData[i * HEIGHT + j] = (uchar) (sumOfSurroundingPixels / maskPixelCount);
             }
         }
         processedImage = new QImage(processedData, WIDTH, HEIGHT, image->bytesPerLine(), image->format());
@@ -70,12 +57,11 @@ QImage *FiltrMedian::process(QImage *image)
             processedImage->setColor(i, qRgb(i, i, i));
         }
     } else {
-        // Obrazy 24 bitowe czyta jako 32...        
+        // Obrazy 24 bitowe czyta jako 32...
 
-        std::vector<int> sumOfSurroundingRedPixels;
-        std::vector<int> sumOfSurroundingGreenPixels;
-        std::vector<int> sumOfSurroundingBluePixels
-                ;
+        int sumOfSurroundingRedPixels = 0;
+        int sumOfSurroundingGreenPixels = 0;
+        int sumOfSurroundingBluePixels = 0;
         const QRgb *photoData = (const QRgb *) image->bits();
         QRgb *processedData = new QRgb[WIDTH * HEIGHT];
 
@@ -86,27 +72,23 @@ QImage *FiltrMedian::process(QImage *image)
                     processedData[i * HEIGHT + j] = photoData[i * HEIGHT + j];
                     continue;
                 }
-                sumOfSurroundingRedPixels.clear();
-                sumOfSurroundingGreenPixels.clear();
-                sumOfSurroundingBluePixels.clear();
+                sumOfSurroundingRedPixels = 0;
+                sumOfSurroundingGreenPixels = 0;
+                sumOfSurroundingBluePixels = 0;
                 maskPixelCount = 0;
                 for (int m = -maskHeight; m <= maskHeight; m++) {
                     for (int n = -maskWidth; n <= maskWidth; n++) {
                         QRgb currentPixel = photoData[(i+m) * HEIGHT + (j+n)];
-                        sumOfSurroundingRedPixels.push_back(qRed(currentPixel));
-                        sumOfSurroundingGreenPixels.push_back(qGreen(currentPixel));
-                        sumOfSurroundingBluePixels.push_back(qBlue(currentPixel));
+                        sumOfSurroundingRedPixels += qRed(currentPixel);
+                        sumOfSurroundingGreenPixels += qGreen(currentPixel);
+                        sumOfSurroundingBluePixels += qBlue(currentPixel);
                         maskPixelCount++;
                     }
                 }
-                int *temp = &sumOfSurroundingRedPixels[0];
-                int medianRed = heapMedian3(temp, maskPixelCount);
-                temp = &sumOfSurroundingGreenPixels[0];
-                int medianGreen = heapMedian3(temp, maskPixelCount);
-                temp = &sumOfSurroundingBluePixels[0];
-                int medianBlue = heapMedian3(temp, maskPixelCount);
-
-                processedData[i * HEIGHT + j] = qRgb(medianRed, medianGreen, medianBlue);
+                sumOfSurroundingRedPixels /= maskPixelCount;
+                sumOfSurroundingGreenPixels /= maskPixelCount;
+                sumOfSurroundingBluePixels /= maskPixelCount;
+                processedData[i * HEIGHT + j] = qRgb(sumOfSurroundingRedPixels, sumOfSurroundingGreenPixels, sumOfSurroundingBluePixels);
             }
         }
         processedImage = new QImage((uchar *)processedData, WIDTH, HEIGHT, image->bytesPerLine(), image->format());
@@ -116,19 +98,18 @@ QImage *FiltrMedian::process(QImage *image)
     return processedImage;
 }
 
-int FiltrMedian::getWidthOfMaskSize()
+int FiltrMean::getWidthOfMaskSize()
 {
     return ui->widthValue->value();
 }
 
-int FiltrMedian::getHeightOfMaskSize()
+int FiltrMean::getHeightOfMaskSize()
 {
     return ui->heightValue->value();
 }
 
 
-
-void FiltrMedian::on_errorButton_clicked()
+void FiltrMean::on_errorButton_clicked()
 {
     QString originalFilePath = selectOriginalFile();
     QImage *originalFileImage = new QImage(originalFilePath);
@@ -177,7 +158,7 @@ void FiltrMedian::on_errorButton_clicked()
     }
 }
 
-double FiltrMedian::calculateErrorFor8BitImage(QImage *original, QImage *other)
+double FiltrMean::calculateErrorFor8BitImage(QImage *original, QImage *other)
 {
     double error = 0;
 
@@ -193,7 +174,7 @@ double FiltrMedian::calculateErrorFor8BitImage(QImage *original, QImage *other)
     return error / (HEIGHT * WIDTH);
 }
 
-double *FiltrMedian::calculateErrorFor32BitImage(QImage *original, QImage *other)
+double *FiltrMean::calculateErrorFor32BitImage(QImage *original, QImage *other)
 {
     double *error = new double[3] {0};
 
@@ -205,9 +186,9 @@ double *FiltrMedian::calculateErrorFor32BitImage(QImage *original, QImage *other
             QRgb currentOriginalPixel = originalPixels[i*HEIGHT + j];
             QRgb currentOtherPixel = otherPixels[i*HEIGHT + j];
 
-            error[0] += std::pow(qRed(originalPixels[i*HEIGHT + j]) - qRed(otherPixels[i*HEIGHT + j]), 2);
-            error[1] += std::pow(qGreen(originalPixels[i*HEIGHT + j]) - qGreen(otherPixels[i*HEIGHT + j]), 2);
-            error[2] += std::pow(qBlue(originalPixels[i*HEIGHT + j]) - qBlue(otherPixels[i*HEIGHT + j]), 2);
+            error[0] += std::pow(qRed(currentOriginalPixel) - qRed(currentOtherPixel), 2);
+            error[1] += std::pow(qGreen(currentOriginalPixel) - qGreen(currentOtherPixel), 2);
+            error[2] += std::pow(qBlue(currentOriginalPixel) - qBlue(currentOtherPixel), 2);
         }
     }
 
@@ -222,7 +203,7 @@ double *FiltrMedian::calculateErrorFor32BitImage(QImage *original, QImage *other
 #include <QStandardPaths>
 #include <QImageReader>
 #include <QImageWriter>
-void FiltrMedian::initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode)
+void FiltrMean::initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode)
 {
     static bool firstDialog = true;
 
@@ -244,7 +225,7 @@ void FiltrMedian::initializeImageFileDialog(QFileDialog &dialog, QFileDialog::Ac
         dialog.setDefaultSuffix("bmp");
 }
 
-QString FiltrMedian::selectOriginalFile()
+QString FiltrMean::selectOriginalFile()
 {
     QFileDialog dialog(this, tr("Open File"));
     initializeImageFileDialog(dialog, QFileDialog::AcceptOpen);

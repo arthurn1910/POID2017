@@ -1,7 +1,7 @@
 #ifndef BRIGHTNESS_H
 #define BRIGHTNESS_H
 
-#include "tool.h"
+#include "../tool.h"
 #include <QWidget>
 #include <QSlider>
 

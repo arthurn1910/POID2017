@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QLabel>
-#include "tool.h"
+#include "../tool.h"
 
 namespace Ui {
 class FiltrSobel;

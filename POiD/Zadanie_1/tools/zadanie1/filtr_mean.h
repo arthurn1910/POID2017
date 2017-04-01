@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QFileDialog>
-#include "tool.h"
+#include "../tool.h"
 
 namespace Ui {
 class FiltrMean;
