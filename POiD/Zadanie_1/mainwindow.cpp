@@ -7,6 +7,7 @@
 #include <QStandardPaths>
 #include <QImageWriter>
 #include <QImageReader>
+#include <QErrorMessage>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -30,7 +31,7 @@ void MainWindow::on_actionFile_triggered()
         ui->tabWidget->setCurrentWidget(newTab);
     }
 }
-#include <QErrorMessage>
+
 void MainWindow::on_actionSaveProcessedImage_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Zapisz", "", ".bmp");

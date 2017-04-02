@@ -3,12 +3,8 @@
 
 #include <QWidget>
 #include <complex>
-#include <valarray>
 #include "tool.h"
 
-
-typedef std::complex<double> Complex;
-typedef std::valarray<Complex> ComplexArray;
 
 class ToolFourier : public Tool
 {
@@ -17,16 +13,41 @@ public:
     explicit ToolFourier(QWidget *parent = 0);
     explicit ToolFourier(int width, int height, int depth, QWidget *parent = 0);
     ~ToolFourier();
+    QImage* process(QImage *photoData);
 
 
 protected:
-    void FFT(ComplexArray *input);
-    void IFFT(ComplexArray *input);
+    void FFT(std::complex<double> *input, const int size);
+    void IFFT(std::complex<double> *input, const int size);
 
-    ComplexArray *grayFourierArray = nullptr;
-    ComplexArray *redFourierArray = nullptr;
-    ComplexArray *greenFourierArray = nullptr;
-    ComplexArray *blueFourierArray = nullptr;
+    QImage *process8BitImage(QImage *originalPhoto);
+    QImage *process32BitImage(QImage *originalPhoto);
+
+    void moveToCenter(std::complex<double> *fftArray);
+    void moveToCorners(std::complex<double> *fftArray);
+
+    virtual void applayMask(std::complex<double> *originalFFT, std::complex<double> *withMaskFFT) = 0;
+
+    std::complex<double> *grayOriginalFFT = nullptr;
+
+    std::complex<double> *redOriginalFFT = nullptr;
+    std::complex<double> *redWithMaskFFT = nullptr;
+
+    std::complex<double> *greenOriginalFFT = nullptr;
+    std::complex<double> *greenWithMaskFFT = nullptr;
+
+    std::complex<double> *blueOriginalFFT = nullptr;
+    std::complex<double> *blueWithMaskFFT = nullptr;
+
+    QImage *amplitudeImage;
+    QImage *amplitudeWithMaskImage;
+    QImage *phaseImage;
+    QImage *phaseWithMaskImage;
+
+private slots:
+    void on_amplitudeButton_clicked();
+
+    void on_phaseButton_clicked();
 };
 
 #endif // ToolFourier_H

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LowPassFilter</class>
- <widget class="QWidget" name="LowPassFilter">
+ <class>LowHighPassFilter</class>
+ <widget class="QWidget" name="LowHighPassFilter">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -25,27 +25,50 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="fourierButton">
+  <widget class="QPushButton" name="phaseButton">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>4</x>
-     <y>332</y>
-     <width>191</width>
+     <x>10</x>
+     <y>330</y>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>Pokaż Fouriera</string>
+    <string>Pokaż widmo fazowe</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="amplitudeButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>280</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Pokaż widmo amplitudy</string>
    </property>
   </widget>
  </widget>

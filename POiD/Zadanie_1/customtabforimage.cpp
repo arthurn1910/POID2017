@@ -8,7 +8,7 @@
 #include "tools/zadanie1/histogram.h"
 #include "tools/zadanie1/filtr_linear_splot.h"
 #include "tools/zadanie1/filtr_sobel.h"
-#include "tools/zadanie2/low_pass_filter.h"
+#include "tools/zadanie2/low_high_pass_filter.h"
 #include <QGraphicsView>
 #include <QMessageBox>
 #include <QImageReader>
@@ -143,7 +143,7 @@ Tool *CustomTabForImage::createTool(int index)
                               this);
         break;
     case 9:
-        return new LowPassFilter(originalGrahpicImage->width(),
+        return new LowHighPassFilter(originalGrahpicImage->width(),
                               originalGrahpicImage->height(),
                               originalGrahpicImage->depth(),
                               this);

@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     tools/zadanie1/negative.cpp \
     tools/tool_fourier.cpp \
     tools/utils.cpp \
-    tools/zadanie2/low_pass_filter.cpp
+    tools/zadanie2/low_high_pass_filter.cpp \
+    tools/zadanie2/spectrum_window.cpp
 
 HEADERS  += mainwindow.h \
     tools/tool.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
     tools/zadanie1/negative.h \
     tools/tool_fourier.h \
     tools/utils.h \
-    tools/zadanie2/low_pass_filter.h
+    tools/zadanie2/low_high_pass_filter.h \
+    tools/zadanie2/spectrum_window.h
 
 FORMS    += mainwindow.ui \
     customtabforimage.ui \
@@ -64,4 +66,5 @@ FORMS    += mainwindow.ui \
     tools/zadanie1/filtr_sobel.ui \
     tools/zadanie1/histogram.ui \
     tools/zadanie1/negative.ui \
-    tools/zadanie2/low_pass_filter.ui
+    tools/zadanie2/low_high_pass_filter.ui \
+    tools/zadanie2/spectrum_window.ui

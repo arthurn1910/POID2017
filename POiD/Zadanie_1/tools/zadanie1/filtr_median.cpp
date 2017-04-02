@@ -74,8 +74,7 @@ QImage *FiltrMedian::process(QImage *image)
 
         std::vector<int> sumOfSurroundingRedPixels;
         std::vector<int> sumOfSurroundingGreenPixels;
-        std::vector<int> sumOfSurroundingBluePixels
-                ;
+        std::vector<int> sumOfSurroundingBluePixels;
         const QRgb *photoData = (const QRgb *) image->bits();
         QRgb *processedData = new QRgb[WIDTH * HEIGHT];
 
