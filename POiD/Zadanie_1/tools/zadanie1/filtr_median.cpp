@@ -31,8 +31,6 @@ QImage *FiltrMedian::process(QImage *image)
     const int maskHeight = getHeightOfMaskSize();
 
     int maskPixelCount = 0;
-    int sumOfSurroundingPixels = 0;
-
 
     if (DEPTH == 8) {
         std::vector<int> pixelsInMaskVector;
@@ -46,7 +44,6 @@ QImage *FiltrMedian::process(QImage *image)
                     processedData[i * HEIGHT + j] = photoData[i * HEIGHT + j];
                     continue;
                 }
-                sumOfSurroundingPixels = 0;
                 maskPixelCount = 0;
                 pixelsInMaskVector.clear();
                 for (int m = -maskHeight; m <= maskHeight; m++) {

@@ -30,9 +30,37 @@ QImage *LowHighPassFilter::process(QImage *image)
     return ToolFourier::process(image);
 }
 
-void LowHighPassFilter::applayMask(std::complex<double> *originalFFT, std::complex<double> *withMaskFFT)
+std::complex<double> *LowHighPassFilter::applayMask(const std::complex<double> *originalFFT, std::complex<double> *maskFFT)
 {
-    for (int i = 0; i < WIDTH * HEIGHT; i++) {
-        withMaskFFT[i] = originalFFT[i];
+    std::complex<double> *withMaskFFT = new std::complex<double>[WIDTH * HEIGHT] {0};
+    double radius = ui->radiusDoubleSpinBox->value();
+    if (ui->lowPassRadioButton->isChecked()) {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) > radius * radius) {
+                    maskFFT[i * HEIGHT + j].real(1);
+                } else {
+                    maskFFT[i * HEIGHT + j].real(0);
+                }
+            }
+        }
+    } else {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) <= radius * radius) {
+                    maskFFT[i * HEIGHT + j].real(1);
+                } else {
+                    maskFFT[i * HEIGHT + j].real(0);
+                }
+            }
+        }
     }
+
+    for (int i = 0; i < HEIGHT; i++) {
+        for (int j = 0; j < WIDTH; j++) {
+            withMaskFFT[i * HEIGHT + j] = maskFFT[i * HEIGHT + j] * originalFFT[i * HEIGHT + j];
+        }
+    }
+
+    return withMaskFFT;
 }

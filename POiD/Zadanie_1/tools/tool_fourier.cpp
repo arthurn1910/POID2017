@@ -90,10 +90,10 @@ QImage *ToolFourier::process8BitImage(QImage *originalPhoto)
     QImage *processedImage;
     const uchar *photoPixels = originalPhoto->bits();
     uchar *processedPhotoPixels = new uchar[WIDTH * HEIGHT];
-    std::complex<double> *grayWithMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
 
     if (grayOriginalFFT == nullptr) {
         grayOriginalFFT = new std::complex<double>[WIDTH * HEIGHT];
+        grayMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
 
         for (int i = 0; i < WIDTH*HEIGHT; i++) {
             grayOriginalFFT[i].real((double) photoPixels[i]);
@@ -104,7 +104,7 @@ QImage *ToolFourier::process8BitImage(QImage *originalPhoto)
         moveToCenter(grayOriginalFFT);
     }
 
-    applayMask(grayOriginalFFT, grayWithMaskFFT);
+    std::complex<double> *grayWithMaskFFT = applayMask(grayOriginalFFT, grayMaskFFT);
 
     moveToCorners(grayWithMaskFFT);
 
@@ -125,13 +125,11 @@ QImage *ToolFourier::process32BitImage(QImage *originalPhoto)
 {
     QImage *processedImage = new QImage(WIDTH, HEIGHT, QImage::Format_RGB888);
     const QRgb *photoPixels = (const QRgb *) originalPhoto->bits();
-    std::complex<double> *redWithMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
-    std::complex<double> *greenWithMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
-    std::complex<double> *blueWithMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
 
     if (redOriginalFFT == nullptr) {
         // RED
         redOriginalFFT = new std::complex<double>[WIDTH * HEIGHT];
+        redMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
         for (int i = 0; i < WIDTH*HEIGHT; i++) {
             redOriginalFFT[i].real(qRed(photoPixels[i]));
         }
@@ -140,6 +138,7 @@ QImage *ToolFourier::process32BitImage(QImage *originalPhoto)
 
         // GREEN
         greenOriginalFFT = new std::complex<double>[WIDTH * HEIGHT];
+        greenMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
         for (int i = 0; i < WIDTH*HEIGHT; i++) {
             greenOriginalFFT[i].real(qGreen(photoPixels[i]));
         }
@@ -148,6 +147,7 @@ QImage *ToolFourier::process32BitImage(QImage *originalPhoto)
 
         //BLUE
         blueOriginalFFT = new std::complex<double>[WIDTH * HEIGHT];
+        blueMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
         for (int i = 0; i < WIDTH*HEIGHT; i++) {
             blueOriginalFFT[i].real(qBlue(photoPixels[i]));
         }
@@ -155,9 +155,9 @@ QImage *ToolFourier::process32BitImage(QImage *originalPhoto)
         moveToCenter(blueOriginalFFT);
     }
 
-    applayMask(redOriginalFFT, redWithMaskFFT);
-    applayMask(greenOriginalFFT, greenWithMaskFFT);
-    applayMask(blueOriginalFFT, blueWithMaskFFT);
+    std::complex<double> *redWithMaskFFT = applayMask(redOriginalFFT, redMaskFFT);
+    std::complex<double> *greenWithMaskFFT = applayMask(greenOriginalFFT, greenMaskFFT);
+    std::complex<double> *blueWithMaskFFT = applayMask(blueOriginalFFT, blueMaskFFT);
 
     moveToCorners(redWithMaskFFT);
     moveToCorners(greenWithMaskFFT);
@@ -211,25 +211,41 @@ void ToolFourier::on_amplitudeButton_clicked()
         uchar *imageData = new uchar[WIDTH * HEIGHT];
 
         double max = 0;
-        double min = 255;
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             amplitudeData[i] = std::log(1 + std::abs(grayOriginalFFT[i]));
 
             if (max < amplitudeData[i]) {
                 max = amplitudeData[i];
             }
-            if (min > amplitudeData[i]) {
-                min = amplitudeData[i];
-            }
         }
 
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
-            imageData[i] = (amplitudeData[i] - min) * 255 / (max - min);
+            imageData[i] = amplitudeData[i] * 255 / max;
         }
 
         amplitudeImage = new QImage(imageData, WIDTH, HEIGHT, WIDTH, QImage::Format_Grayscale8);
         for (int i = 0; i < 256; i++) {
             amplitudeImage->setColor(i, qRgb(i, i, i));
+        }
+
+        double *amplitudeWithMaskData = new double[WIDTH * HEIGHT];
+        uchar *imageWithMaskData = new uchar[WIDTH * HEIGHT];
+        max = 0;
+        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+            amplitudeWithMaskData[i] = std::log(1 + std::abs((grayOriginalFFT[i] * grayMaskFFT[i])));
+
+            if (max < amplitudeWithMaskData[i]) {
+                max = amplitudeWithMaskData[i];
+            }
+        }
+
+        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+            imageWithMaskData[i] = (uchar) amplitudeWithMaskData[i] * 255 / max;
+        }
+
+        amplitudeWithMaskImage = new QImage(imageWithMaskData, WIDTH, HEIGHT, WIDTH, QImage::Format_Grayscale8);
+        for (int i = 0; i < 256; i++) {
+            amplitudeWithMaskImage->setColor(i, qRgb(i, i, i));
         }
     } else {
         amplitudeImage = new QImage(WIDTH, HEIGHT, QImage::Format_RGB888);
@@ -240,7 +256,6 @@ void ToolFourier::on_amplitudeButton_clicked()
         amplitudeData[2] = new double[WIDTH * HEIGHT];
 
         double max[3] {0};
-        double min[3] {255};
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             // RED
             amplitudeData[0][i] = std::log(1 + std::abs(redOriginalFFT[i]));
@@ -248,17 +263,11 @@ void ToolFourier::on_amplitudeButton_clicked()
             if (max[0] < amplitudeData[0][i]) {
                 max[0] = amplitudeData[0][i];
             }
-            if (min[0] > amplitudeData[0][i]) {
-                min[0] = amplitudeData[0][i];
-            }
             // GREEN
             amplitudeData[1][i] = std::log(1 + std::abs(greenOriginalFFT[i]));
 
             if (max[1] < amplitudeData[1][i]) {
                 max[1] = amplitudeData[1][i];
-            }
-            if (min[1] > amplitudeData[1][i]) {
-                min[1] = amplitudeData[1][i];
             }
             //BLUE
             amplitudeData[2][i] = std::log(1 + std::abs(blueOriginalFFT[i]));
@@ -266,15 +275,12 @@ void ToolFourier::on_amplitudeButton_clicked()
             if (max[2] < amplitudeData[2][i]) {
                 max[2] = amplitudeData[2][i];
             }
-            if (min[2] > amplitudeData[2][i]) {
-                min[2] = amplitudeData[2][i];
-            }
         }
 
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
-            amplitudeData[0][i] = (amplitudeData[0][i] - min[0]) * 255 / (max[0] - min[0]);
-            amplitudeData[1][i] = (amplitudeData[1][i] - min[1]) * 255 / (max[1] - min[1]);
-            amplitudeData[2][i] = (amplitudeData[2][i] - min[2]) * 255 / (max[2] - min[2]);
+            amplitudeData[0][i] = (amplitudeData[0][i]) * 255 / (max[0]);
+            amplitudeData[1][i] = (amplitudeData[1][i]) * 255 / (max[1]);
+            amplitudeData[2][i] = (amplitudeData[2][i]) * 255 / (max[2]);
         }
 
         for (int i = 0; i < HEIGHT; i++) {
@@ -291,6 +297,7 @@ void ToolFourier::on_amplitudeButton_clicked()
 
     SpectrumWindow *window = new SpectrumWindow(this);
     window->setOriginalSpectrum(amplitudeImage);
+    window->setWithMaskSpectrum(amplitudeWithMaskImage);
     window->show();
 }
 

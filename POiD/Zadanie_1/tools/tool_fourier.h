@@ -26,18 +26,19 @@ protected:
     void moveToCenter(std::complex<double> *fftArray);
     void moveToCorners(std::complex<double> *fftArray);
 
-    virtual void applayMask(std::complex<double> *originalFFT, std::complex<double> *withMaskFFT) = 0;
+    virtual std::complex<double> *applayMask(const std::complex<double> *originalFFT, std::complex<double> *maskFFT) = 0;
 
     std::complex<double> *grayOriginalFFT = nullptr;
+    std::complex<double> *grayMaskFFT = nullptr;
 
     std::complex<double> *redOriginalFFT = nullptr;
-    std::complex<double> *redWithMaskFFT = nullptr;
+    std::complex<double> *redMaskFFT = nullptr;
 
     std::complex<double> *greenOriginalFFT = nullptr;
-    std::complex<double> *greenWithMaskFFT = nullptr;
+    std::complex<double> *greenMaskFFT = nullptr;
 
     std::complex<double> *blueOriginalFFT = nullptr;
-    std::complex<double> *blueWithMaskFFT = nullptr;
+    std::complex<double> *blueMaskFFT = nullptr;
 
     QImage *amplitudeImage;
     QImage *amplitudeWithMaskImage;
