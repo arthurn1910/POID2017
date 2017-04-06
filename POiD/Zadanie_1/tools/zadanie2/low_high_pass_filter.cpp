@@ -30,9 +30,7 @@ QImage *LowHighPassFilter::process(QImage *image)
     return ToolFourier::process(image);
 }
 
-std::complex<double> *LowHighPassFilter::applayMask(const std::complex<double> *originalFFT, std::complex<double> *maskFFT)
-{
-    std::complex<double> *withMaskFFT = new std::complex<double>[WIDTH * HEIGHT] {0};
+void LowHighPassFilter::createMask(std::complex<double> *maskFFT) {
     double radius = ui->radiusDoubleSpinBox->value();
     if (ui->lowPassRadioButton->isChecked()) {
         for (int i = 0; i < HEIGHT; i++) {
@@ -55,12 +53,4 @@ std::complex<double> *LowHighPassFilter::applayMask(const std::complex<double> *
             }
         }
     }
-
-    for (int i = 0; i < HEIGHT; i++) {
-        for (int j = 0; j < WIDTH; j++) {
-            withMaskFFT[i * HEIGHT + j] = maskFFT[i * HEIGHT + j] * originalFFT[i * HEIGHT + j];
-        }
-    }
-
-    return withMaskFFT;
 }

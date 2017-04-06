@@ -189,7 +189,17 @@
    </item>
    <item>
     <property name="text">
-     <string>Filtr dolnoprzepustowy</string>
+     <string>Filtr dolno/górno-przepustowy</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Filtr pasmowo-przepustowy/zaporowy</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Filtr z wykrywaniem krawędzi</string>
     </property>
    </item>
   </widget>

@@ -18,7 +18,7 @@ public:
     ~LowHighPassFilter();
 
     QImage *process(QImage *image);
-    std::complex<double> *applayMask(const std::complex<double> *originalFFT, std::complex<double> *maskFFT);
+    void createMask(std::complex<double> *maskFFT);
 
 
 private:

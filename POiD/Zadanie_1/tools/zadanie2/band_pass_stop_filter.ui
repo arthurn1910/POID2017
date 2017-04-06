@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LowHighPassFilter</class>
- <widget class="QWidget" name="LowHighPassFilter">
+ <class>BandPassStopFilter</class>
+ <widget class="QWidget" name="BandPassStopFilter">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -71,10 +71,10 @@
     <string>Pokaż widmo amplitudy</string>
    </property>
   </widget>
-  <widget class="QDoubleSpinBox" name="radiusDoubleSpinBox">
+  <widget class="QDoubleSpinBox" name="exteriorRadiusDoubleSpinBox">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>120</x>
      <y>50</y>
      <width>71</width>
      <height>31</height>
@@ -100,7 +100,7 @@
     <rect>
      <x>10</x>
      <y>50</y>
-     <width>91</width>
+     <width>101</width>
      <height>31</height>
     </rect>
    </property>
@@ -112,7 +112,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Promień:</string>
+    <string>Promień zew.:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -122,7 +122,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>90</y>
+     <y>130</y>
      <width>181</width>
      <height>80</height>
     </rect>
@@ -130,7 +130,7 @@
    <property name="title">
     <string>Typ</string>
    </property>
-   <widget class="QRadioButton" name="lowPassRadioButton">
+   <widget class="QRadioButton" name="bandPassRadioButton">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -140,13 +140,13 @@
      </rect>
     </property>
     <property name="text">
-     <string>Dolnoprzepustowy</string>
+     <string>Pasmowo-przepustowy</string>
     </property>
     <property name="checked">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QRadioButton" name="highPassRadioButton">
+   <widget class="QRadioButton" name="bandStopRadioButton">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -156,9 +156,56 @@
      </rect>
     </property>
     <property name="text">
-     <string>Górnoprzepustowy</string>
+     <string>Pasmowo-zaporowy</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QDoubleSpinBox" name="interiorRadiusDoubleSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>90</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="maximum">
+    <double>256.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>20.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="radiusLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Promień wew.:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources/>

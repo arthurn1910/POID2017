@@ -9,6 +9,8 @@
 #include "tools/zadanie1/filtr_linear_splot.h"
 #include "tools/zadanie1/filtr_sobel.h"
 #include "tools/zadanie2/low_high_pass_filter.h"
+#include "tools/zadanie2/band_pass_stop_filter.h"
+#include "tools/zadanie2/edge_detection_filter.h"
 #include <QGraphicsView>
 #include <QMessageBox>
 #include <QImageReader>
@@ -144,6 +146,16 @@ Tool *CustomTabForImage::createTool(int index)
         break;
     case 9:
         return new LowHighPassFilter(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+    case 10:
+        return new BandPassStopFilter(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+    case 11:
+        return new EdgeDetectionFilter(originalGrahpicImage->width(),
                               originalGrahpicImage->height(),
                               originalGrahpicImage->depth(),
                               this);

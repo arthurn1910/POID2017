@@ -38,7 +38,9 @@ SOURCES += main.cpp\
     tools/tool_fourier.cpp \
     tools/utils.cpp \
     tools/zadanie2/low_high_pass_filter.cpp \
-    tools/zadanie2/spectrum_window.cpp
+    tools/zadanie2/spectrum_window.cpp \
+    tools/zadanie2/band_pass_stop_filter.cpp \
+    tools/zadanie2/edge_detection_filter.cpp
 
 HEADERS  += mainwindow.h \
     tools/tool.h \
@@ -54,7 +56,9 @@ HEADERS  += mainwindow.h \
     tools/tool_fourier.h \
     tools/utils.h \
     tools/zadanie2/low_high_pass_filter.h \
-    tools/zadanie2/spectrum_window.h
+    tools/zadanie2/spectrum_window.h \
+    tools/zadanie2/band_pass_stop_filter.h \
+    tools/zadanie2/edge_detection_filter.h
 
 FORMS    += mainwindow.ui \
     customtabforimage.ui \
@@ -67,4 +71,6 @@ FORMS    += mainwindow.ui \
     tools/zadanie1/histogram.ui \
     tools/zadanie1/negative.ui \
     tools/zadanie2/low_high_pass_filter.ui \
-    tools/zadanie2/spectrum_window.ui
+    tools/zadanie2/spectrum_window.ui \
+    tools/zadanie2/band_pass_stop_filter.ui \
+    tools/zadanie2/edge_detection_filter.ui
