@@ -94,7 +94,10 @@ QImage *ToolFourier::process8BitImage(QImage *originalPhoto)
     IFFT(grayWithMaskFFT, WIDTH * HEIGHT);
 
     for (int i = 0; i < WIDTH*HEIGHT; i++) {
-        processedPhotoPixels[i] = (uchar) grayWithMaskFFT[i].real();
+        processedPhotoPixels[i] = (uchar) std::abs(grayWithMaskFFT[i]);
+        if(processedPhotoPixels[i] > 255) {
+            processedPhotoPixels[i] = 255;
+        }
     }
 
     processedImage = new QImage(processedPhotoPixels, WIDTH, HEIGHT, originalPhoto->bytesPerLine(), originalPhoto->format());
@@ -157,7 +160,22 @@ QImage *ToolFourier::process32BitImage(QImage *originalPhoto)
 
     for (int i = 0; i < HEIGHT; i++) {
         for (int j = 0; j < WIDTH; j++) {
-            processedImage->setPixel(j, i, qRgb(redWithMaskFFT[i * HEIGHT + j].real(), greenWithMaskFFT[i * HEIGHT + j].real(), blueWithMaskFFT[i * HEIGHT + j].real()));
+            double red = std::abs(redWithMaskFFT[i * HEIGHT + j]);
+            if(red > 255) {
+                red = 255;
+            }
+
+            double green = std::abs(greenWithMaskFFT[i * HEIGHT + j]);
+            if(green > 255) {
+                green = 255;
+            }
+
+            double blue = std::abs(blueWithMaskFFT[i * HEIGHT + j]);
+            if(blue > 255) {
+                blue = 255;
+            }
+
+            processedImage->setPixel(j, i, qRgb(red, green, blue));
         }
     }
 
@@ -375,15 +393,15 @@ void ToolFourier::on_phaseButton_clicked()
 {
     if (DEPTH == 8) {
         createPhaseSpectrumGray();
-        //createPhaseSpectrumWithMaskGray();
+        createPhaseSpectrumWithMaskGray();
     } else {
         createPhaseSpectrumColor();
-        //createPhaseSpectrumWithMaskColor();
+        createPhaseSpectrumWithMaskColor();
     }
 
     SpectrumWindow *window = new SpectrumWindow(this);
     window->setOriginalSpectrum(phaseImage);
-    //window->setWithMaskSpectrum(phaseWithMaskImage);
+    window->setWithMaskSpectrum(phaseWithMaskImage);
     window->show();
 }
 
@@ -409,7 +427,7 @@ void ToolFourier::createPhaseSpectrumGray()
     moveToCenter(grayOriginalFFT);
 
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
-        imageData[i] = (phaseData[i] - minValueForNormalizationGray) * 255 / (maxValueForNormalizationGray - minValueForNormalizationGray);
+        imageData[i] = (uchar) (phaseData[i] - minValueForNormalizationGray) * 255 / (maxValueForNormalizationGray - minValueForNormalizationGray);
     }
 
     phaseImage = new QImage(imageData, WIDTH, HEIGHT, WIDTH, QImage::Format_Grayscale8);
@@ -417,7 +435,7 @@ void ToolFourier::createPhaseSpectrumGray()
         phaseImage->setColor(i, qRgb(i, i, i));
     }
 }
-
+#include <iostream>
 void ToolFourier::createPhaseSpectrumWithMaskGray()
 {
     double *phaseWithMaskData = new double[WIDTH * HEIGHT];

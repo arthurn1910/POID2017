@@ -126,9 +126,9 @@
   <widget class="QComboBox" name="toolsComboBox">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>540</x>
      <y>60</y>
-     <width>201</width>
+     <width>221</width>
      <height>31</height>
     </rect>
    </property>
@@ -200,6 +200,16 @@
    <item>
     <property name="text">
      <string>Filtr z wykrywaniem krawędzi</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Filtr fazy</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Segmentacja</string>
     </property>
    </item>
   </widget>

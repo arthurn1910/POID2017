@@ -11,6 +11,8 @@
 #include "tools/zadanie2/low_high_pass_filter.h"
 #include "tools/zadanie2/band_pass_stop_filter.h"
 #include "tools/zadanie2/edge_detection_filter.h"
+#include "tools/zadanie2/phase_filter.h"
+#include "tools/zadanie2/segmentation.h"
 #include <QGraphicsView>
 #include <QMessageBox>
 #include <QImageReader>
@@ -82,7 +84,7 @@ void CustomTabForImage::on_toolsComboBox_currentIndexChanged(int index)
     } else {
         tool = createTool(index);
 
-        toolLayout->addWidget((QWidget *)tool);        
+        toolLayout->addWidget((QWidget *)tool);
         ui->transformButton->setEnabled(true);
     }
 }
@@ -156,6 +158,18 @@ Tool *CustomTabForImage::createTool(int index)
                               this);
     case 11:
         return new EdgeDetectionFilter(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+        break;
+    case 12:
+        return new PhaseFilter(originalGrahpicImage->width(),
+                              originalGrahpicImage->height(),
+                              originalGrahpicImage->depth(),
+                              this);
+        break;
+    case 13:
+        return new Segmentation(originalGrahpicImage->width(),
                               originalGrahpicImage->height(),
                               originalGrahpicImage->depth(),
                               this);
