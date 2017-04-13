@@ -35,7 +35,6 @@ f.visible = "on";
 currentDirectory = get_absolute_file_path("zadanie_1.sce");
 exec(currentDirectory + "\utils.sce");
 exec(currentDirectory + "\bisection.sce");
-exec(currentDirectory + "\golden_section.sce");
 
 function processButton_callback(handles)
 //Write your callback for  processButton  here
@@ -47,13 +46,10 @@ function processButton_callback(handles)
     
     maxIterations = strtod(handles.maxIterationsValue.string);
     precision = strtod(handles.precisionValue.string);
-    
-    useMethodBisection = handles.methodBisection.value;
-    useMethodGoldenSection = handles.methodGoldenSection.value;
-    
+        
     handles.assertLabel.visible = "off"
     handles.assertErrors.visible = "off"
-    [validInput, errorStrings] = assertInputData(stringEquation, rangeMin, rangeMax, useMethodBisection, useMethodGoldenSection, maxIterations, precision);
+    [validInput, errorStrings] = assertInputData(stringEquation, rangeMin, rangeMax, maxIterations, precision);
     
     if ~validInput then
         handles.assertLabel.visible = "on"
