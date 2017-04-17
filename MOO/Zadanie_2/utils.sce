@@ -1,4 +1,4 @@
-function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeXMin, rangeXMax, maxIterations, precision)
+function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeXMin, rangeXMax,rangeYMin, rangeYMax, maxIterations, precision)
     valid = %t;
     errorStringMatrix = [];
     
@@ -18,8 +18,8 @@ function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeXMin, r
     end
     
     if (~isempty(containsOtherThenX)) then
-        //valid = %f;
-        //errorStringMatrix = [errorStringMatrix, "Funkcja zawiera zmienne inne niż X."];
+        valid = %f;
+        errorStringMatrix = [errorStringMatrix, "Funkcja zawiera zmienne inne niż X,Y."];
     end
     
     // Assertion of 'rangeMin'
@@ -31,6 +31,7 @@ function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeXMin, r
     // Assertion of 'rangeMax'
     if isnan(rangeXMax) then
         valid = %f;
+        print('%f',rangeXMax);
         errorStringMatrix = [errorStringMatrix, "Kraniec górnego przedziału X nie jest liczbą."];
     end
     
@@ -38,6 +39,24 @@ function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeXMin, r
     if ~isnan(rangeXMin) & ~isnan(rangeXMax) & rangeXMin > rangeXMax then
         valid = %f;
         errorStringMatrix = [errorStringMatrix, "Lewy kraniec przedziału X jest większy od prawego."]; 
+    end   
+    
+    // Assertion of 'rangeMin'
+    if isnan(rangeYMin) then
+        valid = %f;
+        errorStringMatrix = [errorStringMatrix, "Kraniec dolnego przedziału Y nie jest liczbą."];
+    end
+    
+    // Assertion of 'rangeMax'
+    if isnan(rangeYMax) then
+        valid = %f;
+        errorStringMatrix = [errorStringMatrix, "Kraniec górnego przedziału Y nie jest liczbą."];
+    end
+    
+    // Assertion of 'rangeMin' and'rangeMax'
+    if ~isnan(rangeYMin) & ~isnan(rangeYMax) & rangeYMin > rangeYMax then
+        valid = %f;
+        errorStringMatrix = [errorStringMatrix, "Lewy kraniec przedziału Y jest większy od prawego."]; 
     end   
     
     // Assertion of 'maxIterations'

@@ -8,14 +8,9 @@ handles.dummy = 0;
 handles.expresionLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.9,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Funkcja f(X,Y):','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','expresionLabel','Callback','')
 handles.expresionValue=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.25,0.9,0.4,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','expresionValue','Callback','')
 
-handles.rangeXLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.8,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Przedział X:','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeXLabel','Callback','')
-handles.rangeXMin=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.25,0.8,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','Od','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeXMin','Callback','')
-handles.rangeXMax=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.45,0.8,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','Do','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeXMax','Callback','')
-
-handles.rangeYLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.8,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Przedział X:','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeYLabel','Callback','')
-handles.rangeYMin=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.25,0.8,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','Od','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeYMin','Callback','')
-handles.rangeYMax=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.45,0.8,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','Do','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeYMax','Callback','')
-
+handles.rangeXLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.8,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Przedział X:','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeLabel','Callback','')
+handles.rangeXMin=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.25,0.8,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','Od','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeMin','Callback','')
+handles.rangeXMax=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.45,0.8,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','Do','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeMax','Callback','')
 
 handles.maxIterationsLabel=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.0,0.7,0.23,0.09],'Relief','default','SliderStep',[0.01,0.1],'String',' Max iteracji:','Style','text','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeLabel','Callback','')
 handles.maxIterationsValue=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','left','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.25,0.7,0.2,0.09],'Relief','default','SliderStep',[0.01,0.1],'String','100','Style','edit','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','rangeMin','Callback','')
@@ -46,28 +41,27 @@ function processButton_callback(handles)
 //Write your callback for  processButton  here
     stringEquation = handles.expresionValue.string;
     stringEquation = convstr(stringEquation, "l");
+    rangeYMin = strtod(handles.rangeYMin.string);
+    rangeYMax = strtod(handles.rangeYMax.string);
     
     rangeXMin = strtod(handles.rangeXMin.string);
     rangeXMax = strtod(handles.rangeXMax.string);
-    
-    rangeYMin = strtod(handles.rangeYMin.string);
-    rangeYMax = strtod(handles.rangeYMax.string);
     
     maxIterations = strtod(handles.maxIterationsValue.string);
     precision = strtod(handles.precisionValue.string);
     
     handles.assertLabel.visible = "off"
     handles.assertErrors.visible = "off"
-    [validInput, errorStrings] = assertInputData(stringEquation, rangeXMin, rangeXMax, maxIterations, precision);
+   /* [validInput, errorStrings] = assertInputData(stringEquation, rangeXMin, rangeXMax, rangeYMin, rangeYMax, maxIterations, precision);
     
     if ~validInput then
         handles.assertLabel.visible = "on"
         handles.assertErrors.visible = "on"
         handles.assertErrors.string = errorStrings;
         return;
-    end  
+    end  */
 
-    //sympleks(stringEquation, rangeMin, rangeMax,maxIterations,precision);
+    sympleks(stringEquation, rangeYMin, rangeYMax, rangeYMin, rangeYMax,maxIterations,precision);
 
 endfunction
 
