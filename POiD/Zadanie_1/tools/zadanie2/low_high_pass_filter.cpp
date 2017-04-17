@@ -35,7 +35,9 @@ void LowHighPassFilter::createMask(std::complex<double> *maskFFT) {
     if (ui->lowPassRadioButton->isChecked()) {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                if (std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) > radius * radius) {
+                if (i == HEIGHT/2 && j == WIDTH/2) {
+                    maskFFT[i * HEIGHT + j].real(1);
+                } else if (std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) > radius * radius) {
                     maskFFT[i * HEIGHT + j].real(1);
                 } else {
                     maskFFT[i * HEIGHT + j].real(0);

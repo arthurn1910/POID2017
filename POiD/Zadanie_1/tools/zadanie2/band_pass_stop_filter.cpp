@@ -25,7 +25,7 @@ BandPassStopFilter::~BandPassStopFilter()
 
 QImage *BandPassStopFilter::process(QImage *image)
 {
-    if (ui->interiorRadiusDoubleSpinBox->value() < ui->exteriorRadiusDoubleSpinBox->value())
+    if (ui->interiorRadiusDoubleSpinBox->value() > ui->exteriorRadiusDoubleSpinBox->value())
     {
         QErrorMessage *radiusError = new QErrorMessage();
         radiusError->showMessage("Kąt wewnętrzny nie może być większy niż zewnętrzny.");
@@ -43,7 +43,9 @@ void BandPassStopFilter::createMask(std::complex<double> *maskFFT) {
     if (ui->bandPassRadioButton->isChecked()) {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                if (std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) >= std::pow(interiorRadius, 2) &&
+                if (i == HEIGHT/2 && j == WIDTH/2) {
+                    maskFFT[i * HEIGHT + j].real(1);
+                } else if (std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) >= std::pow(interiorRadius, 2) &&
                        std::pow(WIDTH/2 - j, 2) + std::pow(HEIGHT/2 - i, 2) <= std::pow(exteriorRadius, 2)) {
                     maskFFT[i * HEIGHT + j].real(1);
                 } else {
