@@ -140,7 +140,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Dolnoprzepustowy</string>
+     <string>Górnoprzepustowy</string>
     </property>
     <property name="checked">
      <bool>true</bool>
@@ -156,7 +156,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Górnoprzepustowy</string>
+     <string>Dolnoprzepustowy</string>
     </property>
    </widget>
   </widget>
