@@ -3,6 +3,7 @@
 #include "tool_fourier.h"
 #include "zadanie2/spectrum_window.h"
 #include <cmath>
+#include <QDebug>
 
 ToolFourier::ToolFourier(QWidget *parent) :
     Tool(parent)
@@ -79,6 +80,9 @@ QImage *ToolFourier::process8BitImage(QImage *originalPhoto)
 
         for (int i = 0; i < WIDTH*HEIGHT; i++) {
             grayOriginalFFT[i].real((double) photoPixels[i]);
+            grayOriginalFFT[i].imag(0);
+            grayMaskFFT[i].real(0);
+            grayMaskFFT[i].imag(0);
         }
 
         FFT(grayOriginalFFT, WIDTH * HEIGHT);
@@ -230,11 +234,11 @@ void ToolFourier::moveToCorners(std::complex<double> *fftArray)
 
 std::complex<double> *ToolFourier::applayMask(const std::complex<double> *originalFFT, const std::complex<double> *maskFFT)
 {
-    std::complex<double> *withMaskFFT = new std::complex<double>[WIDTH * HEIGHT] {0};
+    std::complex<double> *withMaskFFT = new std::complex<double>[WIDTH * HEIGHT];
 
     for (int i = 0; i < HEIGHT; i++) {
         for (int j = 0; j < WIDTH; j++) {
-            withMaskFFT[i * HEIGHT + j] = maskFFT[i * HEIGHT + j] * originalFFT[i * HEIGHT + j];
+            withMaskFFT[i * WIDTH + j] = maskFFT[i * WIDTH + j] * originalFFT[i * WIDTH + j];
         }
     }
 
