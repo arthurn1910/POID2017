@@ -1,6 +1,9 @@
 #include "segmentation.h"
 #include "ui_segmentation.h"
 #include <QtDebug>
+#include <QTextBrowser>
+#include "spectrum_window.h"
+
 Segmentation::Segmentation(QWidget *parent) :
     Tool(parent),
     ui(new Ui::Segmentation)
@@ -26,7 +29,8 @@ QImage *Segmentation::process(QImage *image)
 
     threshold = ui->thresholdSpinBox->value();
     maxSplitDepth = ui->maxDepthSpinBox->value();
-
+    bool showEdge = ui->edgeCheckBox->isChecked();
+    QString segmentInfo;
     if (DEPTH == 8) {
         uchar *imageBits = image->bits();
         uchar *processedBits = new uchar[HEIGHT * WIDTH];
@@ -42,58 +46,47 @@ QImage *Segmentation::process(QImage *image)
         startingRegion->positionY = 0;
 
         split(imageData, regions, startingRegion);
-
-//        Segment segment;
-//        Region firstRegion;
-//        firstRegion.regionId = 100;
-//        firstRegion.positionX = 100;
-//        firstRegion.positionY = 100;
-//        firstRegion.height = 100;
-//        firstRegion.width = 100;
-//        segment.addRegion(&firstRegion);
-//        qDebug() << "Size: " << segment.size;
-//        qDebug() << "Mean: " << segment.mean;
-
-//        Region secondRegion;
-//        secondRegion.regionId = 100;
-//        secondRegion.positionX = 200;
-//        secondRegion.positionY = 100;
-//        secondRegion.height = 100;
-//        secondRegion.width = 100;
-
-//        qDebug() << "Can add: " << segment.canAddRegion(&secondRegion, threshold);
-
-        qDebug() << "Regions: " << regions->size() << "\n";
+        QTextBrowser *segmentText = ui->segmentInfo;
         if (regions->size() > 0) {
             marge(regions);
 
-            int color = 255 / segments->size();
-
             for (int k = 0; k < segments->size(); k++) {
                 Segment *tempSegment = segments->at(k);
-//                if (tempSegment->regions.size() < 5) {
-//                    continue;
-//                }
 //                qDebug() << "Segment: " << k << ", Region: " << tempSegment->regions.size();
+
+                segmentInfo.append("S: ");
+                segmentInfo.append(QString::number(k));
+                segmentInfo.append(", R: ");
+                segmentInfo.append(QString::number(tempSegment->regions.size()));
+                segmentInfo.append(", ");
+                segmentInfo.append(QString::number((tempSegment->size * 100.0) / (WIDTH * HEIGHT)));
+                segmentInfo.append("%\n");
+
                 for (int m = 0; m < tempSegment->regions.size(); m++) {
                     Region *temp = tempSegment->regions.at(m);
-//                    qDebug() << "Segment: " << k << ", Region: " << m << ", X: " << temp->positionX << "\n";
-//                    qDebug() << "Segment: " << k << ", Region: " << m << ", Y: " << temp->positionY << "\n";
-//                    qDebug() << "Segment: " << k << ", Region: " << m << ", width: " << temp->width << "\n";
-//                    qDebug() << "Segment: " << k << ", Region: " << m << ", height: " << temp->height << "\n";
-                    for (int i = 0; i < temp->height; i++) {
-                        for (int j = 0; j < temp->width; j++) {
-//                            if (i == 0 || i == temp->height - 1) {
-                                imageData[(temp->positionY + i) * WIDTH + temp->positionX + j] = tempSegment->mean;
-//                            }
+                    if (showEdge) {
+                        for (int i = 0; i < temp->height; i++) {
+                            for (int j = 0; j < temp->width; j++) {
+                                if (i == 0 || i == temp->height - 1) {
+                                    imageData[(temp->positionY + i) * WIDTH + temp->positionX + j] = 255;
+                                } else {
+                                    imageData[(temp->positionY + i) * WIDTH + temp->positionX + j] = tempSegment->mean;
+                                }
+                            }
+                            imageData[(temp->positionY + i) * WIDTH + temp->positionX] = 255;
+                            imageData[(temp->positionY + i) * WIDTH + temp->positionX + temp->width - 1] = 255;
                         }
-//                        imageData[(temp->positionY + i) * WIDTH + temp->positionX] = tempSegment->mean;
-//                        imageData[(temp->positionY + i) * WIDTH + temp->positionX + temp->width - 1] = tempSegment->mean;
+                    } else {
+                        for (int i = 0; i < temp->height; i++) {
+                            for (int j = 0; j < temp->width; j++) {
+                                imageData[(temp->positionY + i) * WIDTH + temp->positionX + j] = tempSegment->mean;
+                            }
+                        }
                     }
                 }
             }
         }
-
+        segmentText->setText(segmentInfo);
 
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             processedBits[i] = (uchar) imageData[i];
@@ -257,6 +250,19 @@ void Segmentation::marge(std::vector<Region *> *regions) {
         }
     }
     qDebug() << "Segments after marge: " << segments->size();
+
+    qDebug() << "Segments before condition: " << segments->size();
+    double condition = ui->condition->value();
+    for (int i = 0; i < segments->size(); i++) {
+        Segment *temp = segments->at(i);
+        //qDebug() << "Segment" << i << ", " << (temp->size * 100.0) / (WIDTH * HEIGHT);
+        if (((temp->size * 100.0) / (WIDTH * HEIGHT)) < condition) {
+            //qDebug() << "Segment" << i << " erased";
+            segments->erase(segments->begin() + i);
+            i--;
+        }
+    }
+    qDebug() << "Segments after condition: " << segments->size();
 }
 
 Segment::Segment() {
@@ -391,4 +397,36 @@ void Segment::margeSegments(Segment *segment) {
         Region *tempRegion = segment->regions.at(i);
         this->addRegion(tempRegion);
     }
+}
+
+void Segmentation::on_showSegmentPushButton_clicked()
+{
+    int selectedSegment = ui->segment->value();
+    if (segments->size() < selectedSegment) {
+        return;
+    }
+
+    uchar *maskData = new uchar[WIDTH * HEIGHT];
+    Segment *segment = segments->at(selectedSegment);
+
+    for (int i = 0; i < WIDTH * HEIGHT; i++)
+        maskData[i] = 0;
+
+    for (int i = 0; i < segment->regions.size(); i++) {
+        Region *temp = segment->regions.at(i);
+        for (int i = 0; i < temp->height; i++) {
+            for (int j = 0; j < temp->width; j++) {
+                maskData[(temp->positionY + i) * WIDTH + temp->positionX + j] = 255;
+            }
+        }
+    }
+
+    QImage *maskImage = new QImage(maskData, WIDTH, HEIGHT, WIDTH, QImage::Format_Grayscale8);
+    for (int i = 0; i < 256; i++) {
+        maskImage->setColor(i, qRgb(i, i, i));
+    }
+
+    SpectrumWindow *window = new SpectrumWindow(this);
+    window->setWithMaskSpectrum(maskImage);
+    window->show();
 }

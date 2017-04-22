@@ -48,6 +48,9 @@ public:
 
     QImage* process(QImage *photoData);
 
+private slots:
+    void on_showSegmentPushButton_clicked();
+
 private:
     double threshold;
     int maxSplitDepth;
