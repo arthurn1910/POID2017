@@ -52,14 +52,14 @@ function processButton_callback(handles)
     
     handles.assertLabel.visible = "off"
     handles.assertErrors.visible = "off"
-    /*[validInput, errorStrings] = assertInputData(stringEquation, rangeXMin, rangeXMax, rangeYMin, rangeYMax, maxIterations, precision);
+    [validInput, errorStrings] = assertInputData(stringEquation, rangeXMin, rangeXMax, rangeYMin, rangeYMax, maxIterations, precision);
     
     if ~validInput then
         handles.assertLabel.visible = "on"
         handles.assertErrors.visible = "on"
         handles.assertErrors.string = errorStrings;
         return;
-    end  */
+    end 
 
     sympleks(stringEquation, rangeYMin, rangeYMax, rangeYMin, rangeYMax,maxIterations,precision);
 

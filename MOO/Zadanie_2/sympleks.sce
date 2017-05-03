@@ -55,7 +55,7 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
     x=[rangeXMin:0.1:rangeXMax];
     y=[rangeYMin:0.1:rangeYMax];
     
-    //plot3d1(x,y,list(feval(x,y,f),  [color("red")*x]));
+    plot3d1(x,y,list(feval(x,y,f),  [color("red")*x]));
                 
     if(zp1<=zp2)then
         if(zp1<=zp3) then
