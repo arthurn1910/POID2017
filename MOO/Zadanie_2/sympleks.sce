@@ -1,20 +1,24 @@
+currentDirectory = get_absolute_file_path("sympleks.sce");
+exec(currentDirectory + "\utils.sce");
 
 function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterations,precision)
-    /*currentRangeXMin=rangeXMin;
-    currentRangeXMax=rangeXMax;
-    currentRangeYMin=rangeYMin;
-    currentRangeYMax=rangeYMax;*/
+   
+    /*rangeXMin=-2;
+    rangeXMax=2;
+    rangeYMin=-2;
+    rangeYMax=2;
     
-    rangeXMin=-20;
-    rangeXMax=20;
-    rangeYMin=-20;
-    rangeYMax=20;
     
     vAlfa = 1;
     vBeta = 2;
     vPsi = 0.5;
-    vSigma=0.5
-    vDistance=(rangeXMax+rangeYMin)/5;
+    vSigma=0.5;*/
+    
+    vAlfa = 1;
+    vBeta = 2;
+    vPsi = 0.5;
+    vSigma=0.2;
+    vDistance=(rangeXMax-rangeXMin)/10;
     
     currentIteration=1;
     
@@ -23,77 +27,163 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
    
         
     scf();
-      
+    
     deff('[z]=f(x,y)', 'z='+equation)
-    xp1=rangeXMin+rand(1)*(rangeXMax-rangeXMin);
-    yp1=rangeYMin+rand(1)*(rangeYMax-rangeYMin);
+    xp1=6.615244;
+    yp1=5.135672;
     x=xp1;
     y=yp1;
     zp1=feval(x,y,f)
-    xp2=xp1+(rangeXMax-rangeXMin)/10;
-    ypk=(rangeYMax-rangeYMin)/10
-    if((yp1+ypk)>rangeYMax) then
-        yp2=yp1-ypk
+    xp2=xp1-vDistance/4;
+    if((yp1+vDistance)>rangeYMax) then
+        yp2=yp1-vDistance;
     else
-        yp2=yp1+ypk
+        yp2=yp1+vDistance
     end
-    
-    
     x=xp2;
     y=yp2;
     zp2=feval(x,y,f)
-    mprintf("%f,%f,%f   %f,%f,%f  \n",xp1,yp1,zp1,xp2,yp2,zp2)
+    vDistanceTop=sqrt((xp1-xp2)^2+(yp1-yp2)^2)
+    [xp3,yp3]=find3thTopyui(xp1,yp1,xp2,yp2,vDistanceTop,equation);
+    x=xp3;
+    y=yp3;
+    zp3=feval(x,y,f)
+    mprintf("\n!!!!!!! Wierzcholek 1: %f,%f\n\n",xp1,yp1)
+    mprintf("!!!!!!! Wierzcholek 2: %f,%f\n\n",xp2,yp2)
+    mprintf("!!!!!!! Wierzcholek 3: %f,%f\n\n",xp3,yp3)
+    
     x=[rangeXMin:0.1:rangeXMax];
     y=[rangeYMin:0.1:rangeYMax];
     
-    //disp(feval(x,y,f));)
-    plot3d(x,y,feval(x,y,f));
-    
+    //plot3d1(x,y,list(feval(x,y,f),  [color("red")*x]));
+                
     if(zp1<=zp2)then
-        xh=xp2;
-        yh=yp2;
-        zh=zp2;
-        xl=xp1;
-        yl=yp1;
-        zl=zp1;
+        if(zp1<=zp3) then
+            xl=xp1;
+            yl=yp1;
+            zl=zp1;
+            if(zp2<=zp3) then
+                xh=xp3;
+                yh=yp3;
+                zh=zp3;
+                xd=xp2;
+                yd=yp2;
+                zd=zp2;
+            else
+                xh=xp2;
+                yh=yp2;
+                zh=zp2;
+                xd=xp3;
+                yd=yp3;
+                zd=zp3;
+            end
+        else
+            xl=xp3;
+            yl=yp3;
+            zl=zp3;
+            xh=xp2;
+            yh=yp2;
+            zh=zp2;
+            xd=xp1;
+            yd=yp1;
+            zd=zp1;
+        end
     else
-        xl=xp2;
-        yl=yp2;
-        zl=zp2;
-        xh=xp1;
-        yh=yp1;
-        zh=zp1;
+        if(zp2<=zp3) then
+            xl=xp2;
+            yl=yp2;
+            zl=zp2;
+            if(zp1<=zp3) then
+                xh=xp3;
+                yh=yp3;
+                zh=zp3;
+                xd=xp1;
+                yd=yp1;
+                zd=zp1;
+            else
+                xh=xp1;
+                yh=yp1;
+                zh=zp1;
+                xd=xp3;
+                yd=yp3;
+                zd=zp3;
+            end
+        else
+            xl=xp3;
+            yl=yp3;
+            zl=zp3;
+            xh=xp1;
+            yh=yp1;
+            zh=zp1;
+            xd=xp2;
+            yd=yp2;
+            zd=zp2;
+        end  
     end
+    
 
-    while currentIteration <= maxIterations
-        if(sqrt((xh-xl)^2+(yh-yl)^2+(zh-zl)^2)>precision) then
-            mprintf("\nIteracja: %i. Punkt l: [ %f : %f ] Wartosc: %f. Punkt h: [ %f : %f ] Wartosc: %f.\n\n\n",currentIteration,xl,yl,zl,xh,yh,zh);
+    //p1=(xh-xl)/100
+    //p2=(yh-xl)/100
+    //mprintf("\n p1: %f, p2: %f, xl: %f, xh: %f, yl: %f, yh: %f \n",p1,p2,xl,xh,yl,yh)
+    //mprintf("%f, %f, %f", yp1, yp2, yp3)
+    //x=[xl:p1:xh];
+    //y=[yl:p2:yh];
+    //mprintf("x: %f\n\n y: %f \n",x,y)
+    //mprintf("\n z: %f \n", list(feval(x,y,f)))
+    //plot3d(x,y,list(feval(x,y,f)))
+    
+            
+    while currentIteration <= maxIterations 
+        if(sqrt((xh-xl)^2+(yh-yl)^2)>precision) then
             if(zh<zl) then
-                mprintf("zamiana h i l\n")
                 xr=xl;
                 yr=yl;
                 zr=zl;
                 xl=xh;
                 yl=yh;
                 zl=zh;
-                xh=xr;
-                yh=yr;
-                zh=zr;
+                xh=xd;
+                yh=yd;
+                zh=zd;
+                xd=xr;
+                yd=yr;
+                zd=zr;
+            elseif(zh<zd) then
+                xr=xh;
+                yr=yh;
+                zr=zh;
+                xh=xd;
+                yh=yd;
+                zh=zd;
+                xd=xr;
+                yd=yr;
+                zd=zr;    
             end
-                        
-            xs=xl;
-            ys=yl;
-            zs=zl;
-            
-            xt=vAlfa*xs+vAlfa*(xs-xh);
-            yt=vAlfa*ys+vAlfa*(ys-yh);
+                       
+
+            mprintf("\nIteracja: %i. Punkt l: [ %f : %f ] Wartosc: %f. Punkt d: [ %f : %f] Wartosc: %f. Punkt h: [ %f : %f ] Wartosc: %f.\n\n\n",currentIteration,xl,yl,zl,xd,yd,zd,xh,yh,zh);
+           //  Punkt 4       
+            xs=(xl+xd)/2;
+            ys=(yl+yd)/2;
+            x=xs;
+            y=ys;
+            zs=feval(x,y,f)
+           
+           
+            xt=(1+vAlfa)*xs-vAlfa*xh;
+            yt=(1+vAlfa)*ys-vAlfa*yh;
             
             x=xt;
             y=yt;
             zt=feval(x,y,f);
+            /*mprintf("\n vvv \n")
+            vDistanceTop1=sqrt((xt-xs)^2+(yt-ys)^2)
+            vDistanceTop2=sqrt((xs-xh)^2+(ys-yh)^2)
+            mprintf("\n odleglsoc %f, %f\n",vDistanceTop1,vDistanceTop2)
+            mprintf("\n Ph: %f, %f, %f  Ps: %f, %f, %f  Pt: %f, %f, %f",xh,yh,zh,xs,ys,zs,xt,yt,zt)*/
+            
                     
             if(zt<zl) then
-                mprintf("1")
                 xe=(1+vPsi)*xt-vPsi*xs;
                 ye=(1+vPsi)*yt-vPsi*ys;
                 x=xe;
@@ -104,29 +194,28 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
                     xh=xe;
                     yh=ye;
                     zh=ze;
-                    mprintf("2, %f,%f,%f,%f,%f,%f",xl,yl,zl,xh,yh,zh)
                 else 
                     
                     xh=xt;
                     yh=yt;
                     zh=zt;
-                    mprintf("3, %f,%f,%f,%f,%f,%f",xl,yl,zl,xh,yh,zh)
                 end
                 
             else
-                mprintf("4")
-                if(zt<zh) then
-                    
-                    xh=xt;
-                    yh=yt;
-                    xh=xt;
-                    mprintf("5, %f,%f,%f,%f,%f,%f",xl,yl,zl,xh,yh,zh)
+                //Punkt 8
+                if(zt>=zd) then
+                    if(zt<zh) then
+                        xh=xt;
+                        yh=yt;
+                        xh=xt;
+                    end
                 end
                 xk=vBeta*xh+(1-vBeta)*xs;
                 yk=vBeta*yh+(1-vBeta)*ys;  
                 x=xk;
                 y=yk;
                 zk=feval(x,y,f);
+                
                 if(zk>=zh) then
                     
                     xh=(xh+xl)/2;
@@ -134,30 +223,31 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
                     x=xh;
                     y=yh;
                     zh=feval(x,y,f);
-                    mprintf("6, %f,%f,%f,%f,%f,%f",xl,yl,zl,xh,yh,zh)
-                else
                     
+                    xd=(xd+xl)/2;
+                    yd=(yd+yl)/2;
+                    x=xd;
+                    y=yd;
+                    zd=feval(x,y,f);
+                    //Punkt 10 
+                    if(zt<zd) then
+                    
+                        xh=xt;
+                        yh=yt;
+                        zh=zt;
+                    end
+                    
+                else
                     xh=xk;
                     yh=yk;
                     zh=zk;
-                    mprintf("7, %f,%f,%f,%f,%f,%f",xl,yl,zl,xh,yh,zh)
-                end
-                if(zt<zh) then
-                    
-                    xh=xt;
-                    yh=yt;
-                    zh=zt;
-                    mprintf("8, %f,%f,%f,%f,%f,%f",xl,yl,zl,xh,yh,zh)
                 end
             end
-                
-           
         else
-            mprintf("9")
            break; 
         end
         currentIteration=currentIteration+1;
     end
-
-    mprintf("Ostateczny zneleziony punkt (%f,%f,%f) w iteracji: ",xl, yl,zl,currentIteration); 
+    currentIteration=currentIteration-1;
+    mprintf("Ostateczny zneleziony punkt (%f,%f,%f) w iteracji: %i",xl, yl,zl,currentIteration); 
 endfunction

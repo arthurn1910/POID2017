@@ -52,7 +52,7 @@ function processButton_callback(handles)
     
     handles.assertLabel.visible = "off"
     handles.assertErrors.visible = "off"
-   /* [validInput, errorStrings] = assertInputData(stringEquation, rangeXMin, rangeXMax, rangeYMin, rangeYMax, maxIterations, precision);
+    /*[validInput, errorStrings] = assertInputData(stringEquation, rangeXMin, rangeXMax, rangeYMin, rangeYMax, maxIterations, precision);
     
     if ~validInput then
         handles.assertLabel.visible = "on"

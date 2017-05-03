@@ -82,3 +82,26 @@ function [valid, errorStringMatrix]=assertInputData(stringEquation, rangeXMin, r
     end
     
 endfunction
+
+
+
+function [xs, ys]=find3thTopyui(x1, y1, x2, y2, distance,equation)
+      xd=(x1+x2)/2;
+      yd=(y1+y2)/2;
+      a=(y2-y1)/(x2-x1);
+      b=y1-((y2-y1)/(x2-x1))*x1;
+      
+      a1=-1/a;
+      b1=yd-a1*xd;
+      
+      yk=a1*xd+b1;
+      delta=sqrt((2*(a1*b1-a1*y2-x2))^2-4*(1+a1^2)*(b1^2-2*b1*y2-distance^2+x2^2+y2^2));
+           
+      xs=((-1)*(2*a1*b1-2*a1*y2-2*x2)-delta*5/4)/2*(1+a1^2);
+      ys=a1*xs+b1;
+            
+      vDistanceTop1=sqrt((xp1-xp2)^2+(yp1-yp2)^2)
+      vDistanceTop2=sqrt((xs-xp2)^2+(ys-yp2)^2)
+      vDistanceTop3=sqrt((xp1-xs)^2+(yp1-ys)^2)
+      mprintf("\n %f, %f, %f \n",vDistanceTop1,vDistanceTop2,vDistanceTop3)
+endfunction
