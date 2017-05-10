@@ -14,10 +14,10 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
     vPsi = 0.5;
     vSigma=0.5;*/
     
-    vAlfa = 1;
-    vBeta = 2;
+    vAlfa = 1.5;
+    vBeta = 1;
     vPsi = 0.5;
-    vSigma=0.2;
+    vSigma=0.5;
     vDistance=(rangeXMax-rangeXMin)/10;
     
     currentIteration=1;
