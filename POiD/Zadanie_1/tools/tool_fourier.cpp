@@ -98,7 +98,11 @@ QImage *ToolFourier::process8BitImage(QImage *originalPhoto)
     IFFT(grayWithMaskFFT, WIDTH * HEIGHT);
 
     for (int i = 0; i < WIDTH*HEIGHT; i++) {
-        processedPhotoPixels[i] = (uchar) std::abs(grayWithMaskFFT[i]);
+        double val = std::abs(grayWithMaskFFT[i]);
+        if(val > 255) {
+            val = 255;
+        }
+        processedPhotoPixels[i] = (uchar) val;
         if(processedPhotoPixels[i] > 255) {
             processedPhotoPixels[i] = 255;
         }

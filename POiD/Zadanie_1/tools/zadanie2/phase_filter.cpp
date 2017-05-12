@@ -3,6 +3,7 @@
 #include "ui_phase_filter.h"
 
 #include <cmath>
+#include <QDebug>
 
 PhaseFilter::PhaseFilter(QWidget *parent) :
     ToolFourier(parent),
@@ -42,6 +43,8 @@ void PhaseFilter::createMask(std::complex<double> *maskFFT)
             complex.real(0);
             complex.imag((-(i * parametrK * 2 * M_PI) / HEIGHT) + (-(j * parametrL * 2 * M_PI) / WIDTH) + (parametrK + parametrL) * M_PI);
             maskFFT[i * WIDTH + j] = std::exp(complex);
+            if (j == 0)
+                qDebug() << "Arg: " << std::arg(maskFFT[i * WIDTH + j]);
         }
     }
 }
