@@ -31,6 +31,11 @@ public:
     Q_INVOKABLE void inputOffsetChanged(double value);
     Q_INVOKABLE void playInput();
 
+    Q_INVOKABLE void increaseOutputMagnitude();
+    Q_INVOKABLE void decreaseOutputMagnitude();
+    Q_INVOKABLE void outputOffsetChanged(double value);
+    Q_INVOKABLE void playOutput();
+
 
 
 signals:
@@ -39,6 +44,7 @@ signals:
 private:
     void readWAV(QString path);
     void updateInputChart();
+    void updateOutputChart();
 
     QValueAxis *inputXAxis;
     QValueAxis *inputYAxis;
@@ -48,15 +54,25 @@ private:
     double inputDurationInSeconds;
     int inputMagnitude;
     double inputOffset;
+    int inputDataSize;
 
     QValueAxis *outputXAxis;
     QValueAxis *outputYAxis;
     QLineSeries *outputSeries;
+    QVector<qint16> outputData;
+    QAudioFormat *outputAudioFormat;
+    double outputDurationInSeconds;
+    int outputMagnitude;
+    double outputOffset;
+    int outputDataSize;
 
-    QByteArray array;
+    QByteArray inputFile;
     QBuffer *inputBuffer;
+
+    QByteArray outputFile;
+    QBuffer *outputBuffer;
+
     QMediaPlayer mediaplayer;
-    QAudioOutput *audioOutput;
 };
 
 #endif // DATASOURCE_H

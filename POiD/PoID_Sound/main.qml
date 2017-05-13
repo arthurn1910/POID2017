@@ -260,6 +260,7 @@ ApplicationWindow {
                             color: parent.down ? "#999999" : "#DDDDDD"
                         }
                         onClicked: {
+                            data.increaseOutputMagnitude()
                         }
                     }
                     Button {
@@ -268,38 +269,30 @@ ApplicationWindow {
                             color: parent.down ? "#999999" : "#DDDDDD"
                         }
                         onClicked: {
+                            data.decreaseOutputMagnitude()
                         }
                     }
                 }
 
-                Row {
-                    id: outputOffsetRow
+                Slider  {
+                    id: outputOffsetSlider
                     anchors.left: parent.left
                     anchors.top: outputMagnitudeRow.bottom
 
-                    anchors.topMargin: parent.height * 0.1
+                    width: outputMagnitudeRow.width
+                    anchors.topMargin: parent.width * 0.1
+                    anchors.rightMargin: parent.width * 0.1
 
-                    spacing: 6
-                    Button {
-                        text: "<<"
-                        background: Rectangle {
-                            color: parent.down ? "#999999" : "#DDDDDD"
-                        }
-                        onClicked: {
-                        }
-                    }
-                    Button {
-                        text: ">>"
-                        background: Rectangle {
-                            color: parent.down ? "#999999" : "#DDDDDD"
-                        }
-                        onClicked: {
-                        }
+                    from: 0
+                    value: 0
+                    to: 1
+                    onValueChanged: {
+                        data.outputOffsetChanged(position)
                     }
                 }
 
                 Button {
-                    anchors.top: outputOffsetRow.bottom
+                    anchors.top: outputOffsetSlider.bottom
 
                     anchors.topMargin: parent.height * 0.1
 
@@ -308,6 +301,7 @@ ApplicationWindow {
                         color: parent.down ? "#999999" : "#DDDDDD"
                     }
                     onClicked: {
+                        data.playOutput()
                     }
                 }
             }
