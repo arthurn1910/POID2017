@@ -60,8 +60,8 @@ void DataSource::updateInputChart()
     inputSeries->clear();
     double sampleRate = inputAudioFormat->sampleRate();
 
-    int minY = 0;
-    int maxY = 0;
+    double minY = 0;
+    double maxY = 0;
     double minX = inputOffset * inputDurationInSeconds * (1.0 / inputMagnitude);
     double maxX = minX + inputDurationInSeconds * (1.0 / inputMagnitude);
 
@@ -97,10 +97,10 @@ void DataSource::updateInputChart()
 void DataSource::updateOutputChart()
 {
     outputSeries->clear();
-    double sampleRate = outputDataSize;//outputAudioFormat->sampleRate();
+    double sampleRate = outputAudioFormat->sampleRate();
 
-    int minY = 0;
-    int maxY = 0;
+    double minY = 0;
+    double maxY = 0;
     double minX = outputOffset * outputDurationInSeconds * (1.0 / outputMagnitude);
     double maxX = minX + outputDurationInSeconds * (1.0 / outputMagnitude);
 
@@ -131,7 +131,6 @@ void DataSource::updateOutputChart()
         outputYAxis->setMin(-abs(minY * 1.2));
         outputYAxis->setMax(abs(minY * 1.2));
     }
-
 }
 
 void DataSource::playInput()
@@ -157,6 +156,7 @@ void DataSource::playOutput()
 void DataSource::readWAV(QString path)
 {
     inputData.clear();
+    outputData.clear();
 
     QFile wav;
     wav.setFileName(path);
