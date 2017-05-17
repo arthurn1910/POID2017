@@ -113,8 +113,8 @@ ApplicationWindow {
                 Component.onCompleted: {
                     var inputSeries = inputChart.createSeries(ChartView.SeriesTypeLine, "Input", inputXAxis, inputYAxis);
                     data.initInputChart(inputSeries, inputXAxis, inputYAxis)
-                    var outputSeries = outputChart.createSeries(ChartView.SeriesTypeLine, "Input", outputXAxis, outputYAxis);
-                    data.initOutputChart(outputSeries, outputXAxis, outputYAxis)
+                    var amdfSeries = amdfChart.createSeries(ChartView.SeriesTypeLine, "Input", amdfXAxis, amdfYAxis);
+                    data.initAmdfChart(amdfSeries, amdfXAxis, amdfYAxis)
                 }
             }
 
@@ -213,8 +213,8 @@ ApplicationWindow {
             }
 
             ChartView {
-                id: outputChart
-                title: "Output sound"
+                id: amdfChart
+                title: "AMDF"
                 antialiasing: true
                 legend.visible: false
 
@@ -228,18 +228,18 @@ ApplicationWindow {
                 height: parent.height * 0.48
 
                 ValueAxis {
-                    id: outputYAxis
+                    id: amdfYAxis
                 }
 
                 ValueAxis {
-                    id: outputXAxis
+                    id: amdfXAxis
                 }
             }
 
             Item {
-                id: outputChartNavi
-                anchors.left: outputChart.right
-                anchors.top: outputChart.top
+                id: amdfChartNavi
+                anchors.left: amdfChart.right
+                anchors.top: amdfChart.top
 
                 anchors.leftMargin: parent.height * 0.02
                 anchors.topMargin: parent.height * 0.03
@@ -247,7 +247,7 @@ ApplicationWindow {
                 height: parent.height * 0.2
 
                 Row {
-                    id: outputMagnitudeRow
+                    id: amdfMagnitudeRow
                     anchors.left: parent.left
                     anchors.top: parent.top
 
@@ -260,7 +260,7 @@ ApplicationWindow {
                             color: parent.down ? "#999999" : "#DDDDDD"
                         }
                         onClicked: {
-                            data.increaseOutputMagnitude()
+                            data.increaseAmdfMagnitude()
                         }
                     }
                     Button {
@@ -269,17 +269,17 @@ ApplicationWindow {
                             color: parent.down ? "#999999" : "#DDDDDD"
                         }
                         onClicked: {
-                            data.decreaseOutputMagnitude()
+                            data.decreaseAmdfMagnitude()
                         }
                     }
                 }
 
                 Slider  {
-                    id: outputOffsetSlider
+                    id: amdfOffsetSlider
                     anchors.left: parent.left
-                    anchors.top: outputMagnitudeRow.bottom
+                    anchors.top: amdfMagnitudeRow.bottom
 
-                    width: outputMagnitudeRow.width
+                    width: amdfMagnitudeRow.width
                     anchors.topMargin: parent.width * 0.1
                     anchors.rightMargin: parent.width * 0.1
 
@@ -287,21 +287,7 @@ ApplicationWindow {
                     value: 0
                     to: 1
                     onValueChanged: {
-                        data.outputOffsetChanged(position)
-                    }
-                }
-
-                Button {
-                    anchors.top: outputOffsetSlider.bottom
-
-                    anchors.topMargin: parent.height * 0.1
-
-                    text: "-- PLAY --"
-                    background: Rectangle {
-                        color: parent.down ? "#999999" : "#DDDDDD"
-                    }
-                    onClicked: {
-                        data.playOutput()
+                        data.amdfOffsetChanged(position)
                     }
                 }
             }
@@ -323,6 +309,16 @@ ApplicationWindow {
                     anchors.fill: parent
                     border.color: "black"
                     border.width: 1
+                }
+
+                Button {
+                    id: amdfButton
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    text: "AMDF"
+                    onClicked: {
+                        data.runAMDF()
+                    }
                 }
             }
         }

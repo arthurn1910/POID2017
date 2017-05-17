@@ -24,27 +24,27 @@ public:
 
     Q_INVOKABLE void loadSoundData(QString path);
     Q_INVOKABLE void initInputChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
-    Q_INVOKABLE void initOutputChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
+    Q_INVOKABLE void initAmdfChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
 
     Q_INVOKABLE void increaseInputMagnitude();
     Q_INVOKABLE void decreaseInputMagnitude();
     Q_INVOKABLE void inputOffsetChanged(double value);
     Q_INVOKABLE void playInput();
 
-    Q_INVOKABLE void increaseOutputMagnitude();
-    Q_INVOKABLE void decreaseOutputMagnitude();
-    Q_INVOKABLE void outputOffsetChanged(double value);
-    Q_INVOKABLE void playOutput();
+    Q_INVOKABLE void increaseAmdfMagnitude();
+    Q_INVOKABLE void decreaseAmdfMagnitude();
+    Q_INVOKABLE void amdfOffsetChanged(double value);
 
-
+    Q_INVOKABLE void runAMDF();
 
 signals:
     void dataLoaded();
+    void amdfProgres();
 
 private:
     void readWAV(QString path);
     void updateInputChart();
-    void updateOutputChart();
+    void updateAmdfChart();
 
     QValueAxis *inputXAxis;
     QValueAxis *inputYAxis;
@@ -56,21 +56,18 @@ private:
     double inputOffset;
     int inputDataSize;
 
-    QValueAxis *outputXAxis;
-    QValueAxis *outputYAxis;
-    QLineSeries *outputSeries;
-    QVector<qint16> outputData;
-    QAudioFormat *outputAudioFormat;
-    double outputDurationInSeconds;
-    int outputMagnitude;
-    double outputOffset;
-    int outputDataSize;
+    QValueAxis *amdfXAxis;
+    QValueAxis *amdfYAxis;
+    QLineSeries *amdfSeries;
+    QVector<double> amdfData;
+    double amdfDurationInSeconds;
+    int amdfMagnitude;
+    double amdfOffset;
 
     QByteArray inputFile;
     QBuffer *inputBuffer;
 
-    QByteArray outputFile;
-    QBuffer *outputBuffer;
+    QByteArray amdfByteArray;
 
     QMediaPlayer mediaplayer;
 };
