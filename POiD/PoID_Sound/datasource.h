@@ -10,7 +10,7 @@
 #include <QMediaPlayer>
 #include <QBuffer>
 #include <QByteArray>
-#include <QAudioOutput>
+#include <vector>
 
 class QQuickView;
 
@@ -24,27 +24,23 @@ public:
 
     Q_INVOKABLE void loadSoundData(QString path);
     Q_INVOKABLE void initInputChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
-    Q_INVOKABLE void initAmdfChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
 
     Q_INVOKABLE void increaseInputMagnitude();
     Q_INVOKABLE void decreaseInputMagnitude();
     Q_INVOKABLE void inputOffsetChanged(double value);
-    Q_INVOKABLE void playInput();
 
-    Q_INVOKABLE void increaseAmdfMagnitude();
-    Q_INVOKABLE void decreaseAmdfMagnitude();
-    Q_INVOKABLE void amdfOffsetChanged(double value);
+    QVector<qint16> getInputData();
+    int getSampleRate();
 
-    Q_INVOKABLE void runAMDF();
+    QByteArray getSoundFileHeader();
+    QVector<qint16> getSoundData();
 
 signals:
     void dataLoaded();
-    void amdfProgres();
 
 private:
     void readWAV(QString path);
     void updateInputChart();
-    void updateAmdfChart();
 
     QValueAxis *inputXAxis;
     QValueAxis *inputYAxis;
@@ -56,20 +52,7 @@ private:
     double inputOffset;
     int inputDataSize;
 
-    QValueAxis *amdfXAxis;
-    QValueAxis *amdfYAxis;
-    QLineSeries *amdfSeries;
-    QVector<double> amdfData;
-    double amdfDurationInSeconds;
-    int amdfMagnitude;
-    double amdfOffset;
-
     QByteArray inputFile;
-    QBuffer *inputBuffer;
-
-    QByteArray amdfByteArray;
-
-    QMediaPlayer mediaplayer;
 };
 
 #endif // DATASOURCE_H

@@ -3,7 +3,10 @@ QT += widgets qml quick charts multimedia
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    datasource.cpp
+    datasource.cpp \
+    amdf.cpp \
+    fourier.cpp \
+    player.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,4 +33,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    datasource.h
+    datasource.h \
+    amdf.h \
+    fourier.h \
+    persistence1d/persistence1d.hpp \
+    player.h

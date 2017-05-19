@@ -15,13 +15,9 @@ Q_DECLARE_METATYPE(QAbstractSeries *)
 Q_DECLARE_METATYPE(QAbstractAxis *)
 
 
-// array.replace(44, 2, QByteArray::fromRawData(new char[2] {test & 0xFF, test >> 8}, 2));
-// outputFile.replace(24, 4, QByteArray::fromRawData((const char*)&test, 4));
-
 DataSource::DataSource(QObject *parent) : QObject(parent)
 {
     inputAudioFormat = new QAudioFormat();
-    inputBuffer = new QBuffer(&mediaplayer);
 }
 
 void DataSource::initInputChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis)
@@ -31,20 +27,10 @@ void DataSource::initInputChart(QLineSeries *lineSeries, QValueAxis *xAxis, QVal
     inputYAxis = yAxis;
 }
 
-void DataSource::initAmdfChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis)
-{
-    amdfSeries = lineSeries;
-    amdfXAxis = xAxis;
-    amdfYAxis = yAxis;
-}
-
 void DataSource::loadSoundData(QString path)
 {
     inputMagnitude = 1;
     inputOffset = 0;
-
-    amdfMagnitude = 1;
-    amdfOffset = 0;
 
     readWAV(path.mid(8));
 
@@ -67,8 +53,8 @@ void DataSource::updateInputChart()
     int offset;
     int samples = sampleRate * (1.0 / inputMagnitude);
 
-    if (samples > 200) {
-        offset = samples / 200;
+    if (samples > 300) {
+        offset = samples / 300;
     } else {
         offset = 1;
     }
@@ -93,65 +79,14 @@ void DataSource::updateInputChart()
     }
 }
 
-void DataSource::updateAmdfChart()
-{
-    qDebug() << "Updating amdf chart";
-    amdfSeries->clear();
-    double sampleRate = inputAudioFormat->sampleRate();
-
-    double minY = 0;
-    double maxY = 0;
-    double minX = amdfOffset * amdfDurationInSeconds * (1.0 / amdfMagnitude);
-    double maxX = minX + amdfDurationInSeconds * (1.0 / amdfMagnitude);
-
-    int offset;
-    int samples = sampleRate * (1.0 / amdfMagnitude);
-
-    if (samples > 200) {
-        offset = samples / 200;
-    } else {
-        offset = 1;
-    }
-
-    qDebug() << "Offset: " << offset;
-
-    for (int i = minX * sampleRate; i < maxX * sampleRate; i += offset) {
-
-        qDebug() << "I: " << i << ", " << amdfData.at(i);
-        amdfSeries->append(i / sampleRate, amdfData.at(i));
-        if (amdfData.at(i) > maxY)
-            maxY = amdfData.at(i);
-        if (amdfData.at(i) < minY)
-            minY = amdfData.at(i);
-    }
-
-    amdfXAxis->setMin(minX);
-    amdfXAxis->setMax(maxX);
-
-    amdfYAxis->setMin(minY - 10);
-    amdfYAxis->setMax(maxY * 1.1);
-}
-
-void DataSource::playInput()
-{
-    inputBuffer->setBuffer(&inputFile);
-    if (!inputBuffer->isOpen())
-        inputBuffer->open(QIODevice::ReadOnly);
-    mediaplayer.setMedia(QMediaContent(), inputBuffer);
-    mediaplayer.setVolume(100);
-    mediaplayer.play();
-}
-
 void DataSource::readWAV(QString path)
 {
     inputData.clear();
-    amdfData.clear();
 
     QFile wav;
     wav.setFileName(path);
     wav.open(QIODevice::ReadOnly);
     inputFile = wav.readAll();
-    amdfByteArray = QByteArray(inputFile.mid(0, 44));
 
     inputAudioFormat->setChannelCount(qFromLittleEndian<quint16>(inputFile.mid(22, 2).data()));
     qDebug() << "Channels: " << inputAudioFormat->channelCount();
@@ -178,11 +113,6 @@ void DataSource::increaseInputMagnitude()
     updateInputChart();
 }
 
-void DataSource::increaseAmdfMagnitude()
-{
-    amdfMagnitude++;
-    updateAmdfChart();
-}
 
 void DataSource::decreaseInputMagnitude()
 {
@@ -196,17 +126,6 @@ void DataSource::decreaseInputMagnitude()
     }
 }
 
-void DataSource::decreaseAmdfMagnitude()
-{
-    if (amdfMagnitude > 1) {
-        amdfMagnitude--;
-        if (amdfMagnitude == 1)
-            amdfOffset = 0;
-        else
-            amdfOffsetChanged(amdfOffset);
-        updateAmdfChart();
-    }
-}
 
 void DataSource::inputOffsetChanged(double value)
 {
@@ -216,28 +135,22 @@ void DataSource::inputOffsetChanged(double value)
     }
 }
 
-void DataSource::amdfOffsetChanged(double value)
+QVector<qint16> DataSource::getInputData() {
+    return inputData;
+}
+
+int DataSource::getSampleRate()
 {
-    if (amdfMagnitude > 1) {
-        amdfOffset = value * (amdfMagnitude - 1);
-        updateAmdfChart();
-    }
+    return inputAudioFormat->sampleRate();
 }
 
 
-void DataSource::runAMDF()
+QByteArray DataSource::getSoundFileHeader()
 {
-    amdfData.clear();
-    for (int offset = 0; offset < inputData.size(); offset++) {
-        double amdf = 0;
-        for (int i = 0; i < inputData.size(); i++) {
-            //qDebug() << "I: " << i << ", with offset: " << (i + offset) % inputData.size();
-            amdf += std::abs(inputData.at(i) - inputData.at((i + offset) % inputData.size()));
-        }
-        amdf /= 1000;
-        amdfData.append(amdf);
-    }
-    amdfDurationInSeconds = amdfData.size() / 2.0 / inputAudioFormat->sampleRate();
+    return inputFile.mid(0, 44);
+}
 
-    updateAmdfChart();
+QVector<qint16> DataSource::getSoundData()
+{
+    return inputData;
 }

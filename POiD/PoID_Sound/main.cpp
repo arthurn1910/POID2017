@@ -3,6 +3,9 @@
 #include <QQmlFileSelector>
 #include <QApplication>
 #include "datasource.h"
+#include "amdf.h"
+#include "fourier.h"
+#include "player.h"
 
 
 int main(int argc, char *argv[])
@@ -13,7 +16,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     //QQmlFileSelector* selector = new QQmlFileSelector(&engine);
 
-     qmlRegisterType<DataSource>("DataSource", 0, 1, "DataSource");
+    qmlRegisterType<Player>("Player", 0, 1, "Player");
+    qmlRegisterType<Fourier>("Fourier", 0, 1, "Fourier");
+    qmlRegisterType<Amdf>("Amdf", 0, 1, "Amdf");
+    qmlRegisterType<DataSource>("DataSource", 0, 1, "DataSource");
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
