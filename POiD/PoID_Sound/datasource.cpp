@@ -43,7 +43,7 @@ void DataSource::updateInputChart()
 {
     qDebug() << "Updating input chart";
     inputSeries->clear();
-    double sampleRate = inputAudioFormat->sampleRate();
+    double sampleRate = getSampleRate();
 
     double minY = 0;
     double maxY = 0;
@@ -51,10 +51,10 @@ void DataSource::updateInputChart()
     double maxX = minX + inputDurationInSeconds * (1.0 / inputMagnitude);
 
     int offset;
-    int samples = sampleRate * (1.0 / inputMagnitude);
+    int samples = inputData.size() * (1.0 / inputMagnitude);
 
-    if (samples > 300) {
-        offset = samples / 300;
+    if (samples > 400) {
+        offset = samples / 400;
     } else {
         offset = 1;
     }
@@ -82,6 +82,7 @@ void DataSource::updateInputChart()
 void DataSource::readWAV(QString path)
 {
     inputData.clear();
+    inputFile.clear();
 
     QFile wav;
     wav.setFileName(path);
@@ -97,13 +98,27 @@ void DataSource::readWAV(QString path)
     inputAudioFormat->setSampleSize(qFromLittleEndian<quint16>(inputFile.mid(34, 2).data()));
     qDebug() << "Sample size: " << inputAudioFormat->sampleSize() << " b";
 
-    inputDataSize = qFromLittleEndian<quint32>(inputFile.mid(40, 4).data());
+    inputDataSize = inputFile.size() - 44; // qFromLittleEndian<quint32>(inputFile.mid(40, 4).data());
+    inputFile.replace(40, 4, QByteArray::fromRawData((const char*)&inputDataSize, 4));
     qDebug() << "Data size: " << inputDataSize << " B";
 
     inputDurationInSeconds = inputDataSize / 2.0 / inputAudioFormat->sampleRate();
 
-    for (int i = 0; i < inputDataSize; i += 2) {
+    qint16 testFirst = qFromLittleEndian<qint16>(inputFile.mid(44, 2).data());
+    qint16 testSecond = qFromLittleEndian<qint16>(inputFile.mid(46, 2).data());
+
+    int start = 0;
+
+    if (testFirst == 20041 && testSecond == 20294) {
+        start = 44;
+    }
+    for (int i = start; i < inputDataSize; i += 2) {
         inputData << (qFromLittleEndian<qint16>(inputFile.mid(44 + i, 2).data()));
+    }
+    if (testFirst == 20041 && testSecond == 20294) {
+        inputDataSize -= 44;
+        inputFile.replace(40, 4, QByteArray::fromRawData((const char*)&inputDataSize, 4));
+        inputDurationInSeconds = inputDataSize / 2.0 / inputAudioFormat->sampleRate();
     }
 }
 
@@ -141,16 +156,30 @@ QVector<qint16> DataSource::getInputData() {
 
 int DataSource::getSampleRate()
 {
-    return inputAudioFormat->sampleRate();
+    return qFromLittleEndian<quint32>(soundHeader.mid(24, 4).data());
 }
 
 
 QByteArray DataSource::getSoundFileHeader()
 {
-    return inputFile.mid(0, 44);
+    return soundHeader.mid(0, 44);
 }
 
 QVector<qint16> DataSource::getSoundData()
 {
     return inputData;
+}
+
+void DataSource::loadSoundHeader(QString path)
+{
+    inputFile.clear();
+
+    QFile wav;
+    wav.setFileName(path.mid(8));
+    wav.open(QIODevice::ReadOnly);
+    inputFile = wav.readAll();
+
+    soundHeader.clear();
+
+    soundHeader.append(inputFile.mid(0, 44));
 }

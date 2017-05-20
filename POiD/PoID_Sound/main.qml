@@ -55,7 +55,9 @@ ApplicationWindow {
 
                 spacing: 6
                 Button {
+                    id: openFileButton
                     text: "Open new file"
+                    visible: false
                     background: Rectangle {
                         implicitWidth: 100
                         implicitHeight: 40
@@ -67,25 +69,59 @@ ApplicationWindow {
                 }
                 Button {
                     text: "Save file"
+                    visible: false
                     background: Rectangle {
                         implicitWidth: 100
                         implicitHeight: 40
                         color: parent.down ? "#999999" : "#DDDDDD"
                     }
                     onClicked: {
-                        fileDialog.Save
                     }
+                }
+                Button {
+                    text: "Select header"
+                    background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        color: parent.down ? "#999999" : "#DDDDDD"
+                    }
+                    onClicked: {
+                        soundHeaderDialog.open()
+                    }
+                }
+
+                Text {
+                    id: fileName
+                    text: "N/A"
+                    font.pointSize: 15
                 }
 
                 FileDialog {
                     id: fileDialog
                     title: "Please choose a file"
                     folder: shortcuts.home
-                    nameFilters: [ "Music files (*.wav *.mp3)", "All files (*)" ]
-                    selectedNameFilter: "Music files (*.wav *.mp3)"
+                    nameFilters: [ "Music files (*.wav)", "All files (*)" ]
+                    selectedNameFilter: "Music files (*.wav)"
                     onAccepted: {
                         data.loadSoundData(fileDialog.fileUrl)
+                        fileName.text = fileDialog.fileUrl
                         content.visible = true
+                    }
+                    onRejected: {
+                        console.log("Canceled")
+                    }
+                }
+
+
+                FileDialog {
+                    id: soundHeaderDialog
+                    title: "Please choose a file"
+                    folder: shortcuts.home
+                    nameFilters: [ "Music files (*.wav)", "All files (*)" ]
+                    selectedNameFilter: "Music files (*.wav)"
+                    onAccepted: {
+                        data.loadSoundHeader(soundHeaderDialog.fileUrl)
+                        openFileButton.visible = true
                     }
                     onRejected: {
                         console.log("Canceled")
@@ -148,12 +184,17 @@ ApplicationWindow {
                 }
 
                 onFourierFinished: {
-                    furierMedianValue.text = fourier.basicFrequencyMedian
+                    furierMedianValue.text = fourier.basicFrequency
                 }
             }
 
             Player {
                 id: player
+
+                Component.onCompleted: {
+                    var generatedSeries = generatedChart.createSeries(ChartView.SeriesTypeLine, "Generated", generatedXAxis, generatedYAxis);
+                    player.initGeneratedChart(generatedSeries, generatedXAxis, generatedYAxis)
+                }
             }
 
             ChartView {
@@ -271,6 +312,9 @@ ApplicationWindow {
                     TabButton {
                         text: qsTr("FOURIER")
                     }
+                    TabButton {
+                        text: qsTr("GENERATED")
+                    }
                 }
 
                 StackLayout {
@@ -282,6 +326,7 @@ ApplicationWindow {
                     anchors.bottom: parent.bottom
 
                     Item {
+                        id: amdfStackLayout
                         anchors.fill: parent
 
                         ChartView {
@@ -358,7 +403,9 @@ ApplicationWindow {
                             }
                         }
                     }
+
                     Item {
+                        id: fourierStackLayout
                         anchors.fill: parent
                         ChartView {
                             id: fourierChart
@@ -430,6 +477,85 @@ ApplicationWindow {
                                 to: 1
                                 onValueChanged: {
                                     fourier.fourierOffsetChanged(position)
+                                }
+                            }
+                        }
+                    }
+
+                    Item {
+                        id: generatedStackLayout
+                        anchors.fill: parent
+
+                        ChartView {
+                            id: generatedChart
+                            title: "GENERATED"
+                            antialiasing: true
+                            legend.visible: false
+
+                            width: parent.width * 0.87
+                            height: parent.height * 0.96
+
+                            ValueAxis {
+                                id: generatedYAxis
+                            }
+
+                            ValueAxis {
+                                id: generatedXAxis
+                            }
+                        }
+
+                        Item {
+                            id: generatedChartNavi
+                            anchors.left: generatedChart.right
+                            anchors.top: generatedChart.top
+
+                            anchors.leftMargin: parent.height * 0.02
+                            anchors.topMargin: parent.height * 0.03
+
+                            height: parent.height * 0.4
+
+                            Row {
+                                id: generatedMagnitudeRow
+                                anchors.left: parent.left
+                                anchors.top: parent.top
+
+                                anchors.bottomMargin: parent.height * 0.05
+
+                                spacing: 6
+                                Button {
+                                    text: " + "
+                                    background: Rectangle {
+                                        color: parent.down ? "#999999" : "#DDDDDD"
+                                    }
+                                    onClicked: {
+                                        player.increaseGeneratedMagnitude()
+                                    }
+                                }
+                                Button {
+                                    text: " -- "
+                                    background: Rectangle {
+                                        color: parent.down ? "#999999" : "#DDDDDD"
+                                    }
+                                    onClicked: {
+                                        player.decreaseGeneratedMagnitude()
+                                    }
+                                }
+                            }
+
+                            Slider  {
+                                id: generatedOffsetSlider
+                                anchors.left: parent.left
+                                anchors.top: generatedMagnitudeRow.bottom
+
+                                width: generatedMagnitudeRow.width
+                                anchors.topMargin: parent.width * 0.1
+                                anchors.rightMargin: parent.width * 0.1
+
+                                from: 0
+                                value: 0
+                                to: 1
+                                onValueChanged: {
+                                    player.generatedOffsetChanged(position)
                                 }
                             }
                         }
@@ -522,7 +648,7 @@ ApplicationWindow {
                                     anchors.left: parent.left
 
                                     font.pointSize: 10
-                                    text: "Basic frequency (minimum): "
+                                    text: "Basic frequency (first): "
                                 }
 
                                 Text {
@@ -678,7 +804,7 @@ ApplicationWindow {
                                     anchors.left: parent.left
 
                                     font.pointSize: 10
-                                    text: "Basic frequency (median): "
+                                    text: "Basic frequency (most similar): "
                                 }
 
                                 Text {
@@ -727,7 +853,7 @@ ApplicationWindow {
                                         anchors.topMargin: parent.height * 0.1
                                         anchors.bottomMargin: parent.height * 0.1
 
-                                        text: "1"
+                                        text: "8"
                                         onTextChanged: {
                                             fourier.threasholdParam = text
                                         }
@@ -748,7 +874,7 @@ ApplicationWindow {
                                 width: parent.width * 0.6
 
                                 anchors.leftMargin: parent.width * 0.05
-                                spacing: -30
+                                spacing: -10
 
                                 Label {
                                     text: qsTr("Window:")
@@ -780,7 +906,7 @@ ApplicationWindow {
                                 anchors.rightMargin: parent.width * 0.02
                                 text: "Play sample"
                                 onClicked: {
-                                    player.generateSoundSample(fourier.basicFrequencyMedian, fourier.amplitude)
+                                    player.generateSoundSample(fourier.basicFrequency, fourier.amplitude)
                                     player.play()
                                 }
                             }
@@ -802,6 +928,169 @@ ApplicationWindow {
 
                     Item {
                         id: multiToneTools
+                        anchors.fill: parent
+
+                        Item {
+                            id: windowRow
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: windowLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "Window size: "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: windowLabel.right
+
+                                anchors.leftMargin: parent.width * 0.02
+
+                                height: parent.height * 1
+                                width: amdfTool.width * 0.1
+
+                                TextInput {
+                                    id: windowValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "16384"
+                                    onTextChanged: {
+                                        fourier.windowParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: frequencyRow
+                            anchors.left: parent.left
+                            anchors.top: windowRow.bottom
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: frequencyLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "Frequency threshold (%): "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: frequencyLabel.right
+
+                                anchors.leftMargin: parent.width * 0.02
+
+                                height: parent.height * 1
+                                width: multiToneTools.width * 0.05
+
+                                TextInput {
+                                    id: frequencyValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "10"
+                                    onTextChanged: {
+                                        fourier.frequencyThreshold = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: threasholdMultiRow
+                            anchors.left: parent.left
+                            anchors.top: frequencyRow.bottom
+                            anchors.leftMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: threasholdMultiLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "Log threashold: "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: threasholdMultiLabel.right
+
+                                anchors.leftMargin: parent.height * 0.02
+
+                                height: parent.height
+                                width: multiToneTools.width * 0.1
+
+                                TextInput {
+                                    id: threasholdMultiValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "5"
+                                    onTextChanged: {
+                                        fourier.threasholdParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Button {
+                            id: fourierMultiPlayButton
+                            visible: false
+                            anchors.right: parent.right
+                            anchors.top: fourierMultiButton.bottom
+                            anchors.rightMargin: parent.width * 0.02
+                            text: "Play sample"
+                            onClicked: {
+                                player.generateSoundMultiSample(fourier)
+                                player.play()
+                            }
+                        }
+
+                        Button {
+                            id: fourierMultiButton
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.rightMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+                            text: "FOURIER multi"
+                            onClicked: {
+                                fourier.runFOURIERmultiTone()
+                                fourierMultiPlayButton.visible = true
+                            }
+                        }
                     }
                 }
             }

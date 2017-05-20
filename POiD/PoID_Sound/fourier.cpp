@@ -5,8 +5,10 @@
 
 Fourier::Fourier(QObject *parent) : QObject(parent)
 {
-    logThreashold = 1;
+    logThreashold = 8;
     windowType = 0;
+    windowSizeMulti = 16384;
+    frequencyThreshold = 10;
 }
 
 void Fourier::FFT(std::complex<float> *input, const int size)
@@ -67,7 +69,13 @@ void Fourier::IFFT(std::complex<float> *input, const int size)
 void Fourier::runFOURIER()
 {
     amplitude = 0;
-    int windowSize = 32768;
+    int windowSize = 1;
+
+    while (windowSize * 2 < inputData.size())
+        windowSize *= 2;
+
+    qDebug() << "Detected window size: " << windowSize;
+
     fourierComplexData = new std::complex<float>[windowSize];
     for (int i = 0; i < windowSize; i++) {
         switch (windowType) {
@@ -88,9 +96,7 @@ void Fourier::runFOURIER()
             amplitude = std::fabs(inputData.at(i));
     }
 
-    qDebug() << "Running Fourier: " << windowSize;
     FFT(fourierComplexData, windowSize);
-    qDebug() << "Fourier done";
 
     fourierAmplitudeData.clear();
     for (int i = 0; i < windowSize / 2; i++) {
@@ -99,9 +105,61 @@ void Fourier::runFOURIER()
 
     fourierDurationInSeconds = fourierAmplitudeData.size() * 2.0 / (double) inputData.size();
 
+    mostSimilar = (sampleRate / windowSize) * findMostSimilar(fourierAmplitudeData, windowSize);
+//    median = (sampleRate / windowSize) * findMaxMedian(fourierAmplitudeData);
+    qDebug() << "Most similiar: " << mostSimilar;
 
+    updateFourierChart();
+    emit fourierFinished();
+}
+
+
+double Fourier::findMostSimilar(std::vector<float> vec, int windowSize)
+{
     p1d::Persistence1D p;
-    p.RunPersistence(fourierAmplitudeData);
+    p.RunPersistence(vec);
+    std::vector< p1d::TPairedExtrema > Extrema;
+    p.GetPairedExtrema(Extrema, logThreashold);
+
+    QVector<int> maxVector;
+    QVector<int> similarCount;
+    int max = 0;
+
+    for(std::vector< p1d::TPairedExtrema >::iterator it = Extrema.begin(); it != Extrema.end(); it++)
+    {
+        maxVector.append((*it).MaxIndex);
+        similarCount.append(0);
+    }
+
+    qSort(maxVector);
+
+    for (int i = 0; i < maxVector.size(); i++) {
+        for (int j = i + 1; j < maxVector.size(); j++) {
+            int comparable = (sampleRate / windowSize) * (maxVector.at(j) + 0.5);
+            int compareTo = (sampleRate / windowSize) * (maxVector.at(i) + 0.5);
+            if ((comparable % compareTo) <= compareTo * 0.1 ||
+                (comparable % compareTo) >= compareTo * 0.9) {
+                similarCount.replace(i, similarCount.at(i) + 1);
+
+                if (max < similarCount.at(i))
+                    max = similarCount.at(i);
+            }
+        }
+    }
+
+    for (int i = 0; i < similarCount.size(); i++) {
+        if (similarCount.at(i) == max) {
+            return maxVector.at(i);
+        }
+    }
+
+    return -1;
+}
+
+double Fourier::findMaxMedian(std::vector<float> vec)
+{
+    p1d::Persistence1D p;
+    p.RunPersistence(vec);
     std::vector< p1d::TPairedExtrema > Extrema;
     p.GetPairedExtrema(Extrema, logThreashold);
 
@@ -119,12 +177,10 @@ void Fourier::runFOURIER()
     }
     qSort(maxVector);
     if (maxVector.size() > 0) {
-        median = (sampleRate / windowSize) * maxVector.at(maxVector.size() / 2);
-        qDebug() << "Median: " << median;
+        return maxVector.at(maxVector.size() / 2);
     }
 
-    updateFourierChart();
-    emit fourierFinished();
+    return -1;
 }
 
 void Fourier::initFourierChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis)
@@ -156,8 +212,8 @@ void Fourier::updateFourierChart()
     int offset;
     int samples = dataSize * (1.0 / fourierMagnitude);
 
-    if (samples > 200) {
-        offset = samples / 200;
+    if (samples > 600) {
+        offset = samples / 600;
     } else {
         offset = 1;
     }
@@ -277,13 +333,103 @@ double Fourier::windowBarlett(int iter, int all)
     return output;
 }
 
-
-QString Fourier::getBasicFrequencyMedian()
+QString Fourier::getBasicFrequency()
 {
-    return QString::number(median, 'f', 2);
+    return QString::number(mostSimilar, 'f', 2);
 }
 
 QString Fourier::getAmplitude()
 {
     return QString::number(amplitude, 'f', 2);
+}
+
+void Fourier::setWindowParam(QString value)
+{
+    windowSizeMulti = value.toInt();
+
+    if (!((windowSizeMulti != 0) && ((windowSizeMulti & (windowSizeMulti - 1)) == 0))) {
+        windowSizeMulti = 512;
+    }
+}
+
+void Fourier::setFrequencyThreshold(QString value)
+{
+    frequencyThreshold = value.toDouble();
+    if (frequencyThreshold < 0)
+        frequencyThreshold = 0;
+}
+
+void Fourier::runFOURIERmultiTone()
+{
+    qDebug() << "Starting fourier multi";
+
+    sequenceFrequency.clear();
+    double lastFrequency = -1;
+
+    for (int iter = 0; iter + windowSizeMulti < inputData.size(); iter += windowSizeMulti) {
+        double windowFrequency = 0;
+        std::vector<float> windowAmplitudeData;
+        std::complex<float> *windowComplexData = new std::complex<float>[windowSizeMulti];
+
+        for (int i = 0; i < windowSizeMulti; i++) {
+            windowComplexData[i] = inputData.at(iter + i) * windowBarlett(i, windowSizeMulti);
+        }
+
+        FFT(windowComplexData, windowSizeMulti);
+
+        windowAmplitudeData.clear();
+        for (int i = 0; i < windowSizeMulti / 2; i++) {
+            windowAmplitudeData.push_back(std::log(std::abs(windowComplexData[i])));
+        }
+        delete [] windowComplexData;
+
+        windowFrequency = (sampleRate / windowSizeMulti) * findMostSimilar(windowAmplitudeData, windowSizeMulti);
+
+        if (lastFrequency == -1) {
+            sequenceFrequency.push_back(iter); // start first
+            lastFrequency = windowFrequency;
+            sequenceFrequency.push_back(windowFrequency); // starting freq
+            continue;
+        }
+
+        if (std::fabs(windowFrequency - lastFrequency) / lastFrequency < frequencyThreshold / 100.0) {
+
+        } else {
+            sequenceFrequency.push_back(iter); // end last
+            sequenceFrequency.push_back(iter); // start next
+            sequenceFrequency.push_back(windowFrequency); // next freq
+            lastFrequency = windowFrequency; // new freq for segment
+        }
+    }
+    sequenceFrequency.push_back(inputData.size()); // start next
+
+    for (int i = 0; i < sequenceFrequency.size(); i += 3) {
+        qDebug() << "From: " << sequenceFrequency.at(i) / sampleRate << ", To: " << sequenceFrequency.at(i + 2) / sampleRate
+                 << ", Freq: " << sequenceFrequency.at(i + 1);
+    }
+
+    int amplitudeOffset = windowSizeMulti / 16;
+    sequenceAmplitude.clear();
+
+    for (int iter = 0; iter + amplitudeOffset < inputData.size(); iter += amplitudeOffset) {
+        int maxAmplitude = 0;
+        for (int i = 0; i < amplitudeOffset; i++) {
+            if (maxAmplitude < std::abs(inputData.at(iter + i)))
+                maxAmplitude = std::abs(inputData.at(iter + i));
+        }
+
+        sequenceAmplitude.push_back(maxAmplitude);
+    }
+    sequenceAmplitude.push_back(0);
+}
+
+
+std::vector<double> Fourier::getSequenceFrequency()
+{
+    return sequenceFrequency;
+}
+
+std::vector<double> Fourier::getSequenceAmplitude()
+{
+    return sequenceAmplitude;
 }

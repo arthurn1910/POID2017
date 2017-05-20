@@ -23,6 +23,7 @@ public:
     explicit DataSource(QObject *parent = 0);
 
     Q_INVOKABLE void loadSoundData(QString path);
+    Q_INVOKABLE void loadSoundHeader(QString path);
     Q_INVOKABLE void initInputChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
 
     Q_INVOKABLE void increaseInputMagnitude();
@@ -50,9 +51,10 @@ private:
     double inputDurationInSeconds;
     int inputMagnitude;
     double inputOffset;
-    int inputDataSize;
+    qint32 inputDataSize;
 
     QByteArray inputFile;
+    QByteArray soundHeader;
 };
 
 #endif // DATASOURCE_H

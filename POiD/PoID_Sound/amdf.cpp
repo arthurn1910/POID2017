@@ -34,8 +34,8 @@ void Amdf::updateAmdfChart()
     int offset;
     int samples = dataSize * (1.0 / amdfMagnitude);
 
-    if (samples > 300) {
-        offset = samples / 300;
+    if (samples > 600) {
+        offset = samples / 600;
     } else {
         offset = 1;
     }
