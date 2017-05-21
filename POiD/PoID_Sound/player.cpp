@@ -109,6 +109,8 @@ void Player::generateSoundMultiSample(Fourier *fourier)
         qint16 value = generatedSound.at(i);
         soundByteArray.append(QByteArray::fromRawData((const char*)&value, 2));
     }
+    qint32 soundByteArraySize = soundByteArray.size() * 2;
+    soundByteArray.replace(40, 4, QByteArray::fromRawData((const char*)&soundByteArraySize, 4));
 
     updateGeneratedChart();
 }
