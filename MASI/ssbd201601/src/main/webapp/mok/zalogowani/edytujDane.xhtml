@@ -1,0 +1,38 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.edytujDane"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+     <ui:define name="content">         
+         <h1>${msg["tytulyPrzypadkow.edytujDane"]}:</h1>
+        <h:form>
+            ${msg["daneKonta.imie"]}* <h:inputText value="#{edytujDaneBean.kontoEdytuj.imie}" id="imie"/><p:messages for="imie" autoUpdate="true"/><br/>
+            ${msg["daneKonta.nazwisko"]}* <h:inputText value="#{edytujDaneBean.kontoEdytuj.nazwisko}" id="nazwisko"/><p:messages for="nazwisko" autoUpdate="true"/><br/>
+            ${msg["daneKonta.email"]}* <h:inputText value="#{edytujDaneBean.kontoEdytuj.email}" id="email"/><p:messages for="email" autoUpdate="true"/><br/>
+            ${msg["daneKonta.numerTelefonu"]}* <h:inputText value="#{edytujDaneBean.kontoEdytuj.telefon}" id="telefon"/><p:messages for="telefon" autoUpdate="true"/><br/>
+            ${msg["komunikat.polaObowiazkowe"]}*<br /><br />
+            
+            <p:commandButton value="#{msg['komunikat.potwierdz']}" action="#{edytujDaneBean.zapiszSwojeKontoPoEdycji()}">
+                <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+            </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+            <h:button outcome="wyswietlSzczegolySwojegoKonta" value="#{msg['komunikat.powrot']}" />
+        </h:form>
+    </ui:define>
+</ui:composition>

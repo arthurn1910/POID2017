@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.modyfikujPoziomyDostepu"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+     <ui:define name="content">
+        <h:form id="nowePoziomy">            
+            <h:dataTable id="listaKont" var="poziom" value="#{modyfikujPoziomyDostepuBean.poziomyDostepuDataModel}">
+                <h:column id="nazwa">
+                    <f:facet name="header">#{msg['komunikat.nazwaDostepu']}</f:facet>
+                    <h:outputText value="#{poziom}" />
+                </h:column>
+                <h:column id="akcja">
+                    <f:facet name="header">#{msg['komunikat.akcja']}</f:facet>
+                    <p:commandButton value="#{msg['komunikat.dodaj']}" update="@form" action="#{modyfikujPoziomyDostepuBean.dodajPoziomDostepu()}" rendered="#{not modyfikujPoziomyDostepuBean.czyPosiadaAktywnyPoziomDostepu()}">
+                        <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+                    </p:commandButton>                    
+                    <p:commandButton value="#{msg['komunikat.odlacz']}" update="@form" action="#{modyfikujPoziomyDostepuBean.odlaczPoziomDostepu()}" rendered="#{modyfikujPoziomyDostepuBean.czyPosiadaAktywnyPoziomDostepu()}">
+                        <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </h:column>
+            </h:dataTable>
+            
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+            <h:commandButton value="#{msg['komunikat.powrot']}" action="wyswietlSzczegolyKonta" />
+        </h:form>
+    </ui:define>
+</ui:composition>

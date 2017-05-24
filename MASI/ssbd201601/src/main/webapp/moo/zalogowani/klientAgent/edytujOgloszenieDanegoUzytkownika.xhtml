@@ -1,0 +1,66 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.edycjaOgloszeniaDanegoUzytkownika"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+     <ui:define name="content">         
+         <h1>${msg["tytulyPrzypadkow.edycjaOgloszeniaDanegoUzytkownika"]}:</h1>
+        <h:form>
+            ${msg["daneOgloszenia.tytul"]}* <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.tytul}" id="tytul"/><p:messages for="tytul" autoUpdate="true"/><br />
+            ${msg["daneOgloszenia.cena"]}* <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.cena}" id="cena"/><p:messages for="cena" autoUpdate="true"/><br />
+            ${msg["daneOgloszenia.typOgloszenia"]}* <h:selectOneMenu value="#{edytujOgloszenieBean.ogloszenieEdytuj.typOgloszenia.nazwa}">
+                <f:selectItem itemValue="ogloszenia.typ.wynajem" itemLabel="${msg['edytujOgloszenie.wynajem']}" />
+                <f:selectItem itemValue="ogloszenia.typ.sprzedaz" itemLabel="${msg['edytujOgloszenie.sprzedaz']}" />
+            </h:selectOneMenu><br />
+            ${msg["daneOgloszenia.nieruchomosc.miejscowosc"]}* <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.nieruchomosc.miejscowosc}" id="miejscowosc"/><p:messages for="miejscowosc" autoUpdate="true"/><br />
+            ${msg["daneOgloszenia.nieruchomosc.ulica"]}* <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.nieruchomosc.ulica}" id="ulica"/><p:messages for="ulica" autoUpdate="true"/><br />
+            ${msg["daneOgloszenia.nieruchomosc.liczbaPokoi"]} <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.nieruchomosc.liczbaPokoi}" id="liczbaPokoi"/><br />
+            ${msg["daneOgloszenia.nieruchomosc.liczbaPieter"]} <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.nieruchomosc.liczbaPieter}" id="iczbaPieter"/><br />
+            ${msg["daneOgloszenia.nieruchomosc.powierzchniaDzialki"]} <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.nieruchomosc.powierzchniaDzialki}" id="powierzchniaDzialki"/><br />
+            ${msg["daneOgloszenia.nieruchomosc.powierzchniaNieruchomosci"]} <h:inputText value="#{edytujOgloszenieBean.ogloszenieEdytuj.nieruchomosc.powierzchniaNieruchomosci}" id="powierzchniaNieruchomosci"/><br />
+            ${msg["komunikat.polaObowiazkowe"]}*<br /><br />
+            
+            <p:commandButton value="#{msg['komunikat.potwierdz']}" action="#{edytujOgloszenieBean.edytujOgloszenieDanegoUzytkownika()}">
+                <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+            </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+            
+            <h:dataTable id="listaWyposazeniaNieruchomosci" var="row" value="#{edytujOgloszenieBean.wyposazenieNieruchomosci}">
+                <h:column id="tytul">
+                    <f:facet name="header">${msg["elementWyposazenia.nazwa"]}</f:facet>
+                    <h:outputText value="#{row.nazwa}" />
+                </h:column>
+                <h:column id="usun">
+                    <f:facet name="header">${msg["elementWyposazenia.usun"]}</f:facet>
+                    <h:commandButton action="#{edytujOgloszenieBean.usunElementWyposazenia(row)}" value="${msg['elementWyposazenia.usun']}"/>
+                </h:column>
+            </h:dataTable>
+            <h:dataTable id="listaDostepnychElementowWyposazeniaNieruchomosci" var="row" value="#{edytujOgloszenieBean.mozliweWyposazenie}">
+                <h:column id="tytul1">
+                    <f:facet name="header">${msg["elementWyposazenia.nazwa"]}</f:facet>
+                    <h:outputText value="#{row.nazwa}" />
+                </h:column>
+                <h:column id="dodaj">
+                    <f:facet name="header">${msg["elementWyposazenia.dodaj"]}</f:facet>
+                    <h:commandButton action="#{edytujOgloszenieBean.dodajElementWyposazenia(row)}" value="${msg['elementWyposazenia.dodaj']}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

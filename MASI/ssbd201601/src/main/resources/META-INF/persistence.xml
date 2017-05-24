@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="puwbazxnhkocevPU" transaction-type="JTA">
+    <jta-data-source>jdbc/masi</jta-data-source>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.ElementWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.KategoriaWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Konto</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Nieruchomosc</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Ogloszenie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.PoziomDostepu</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Spotkanie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypOgloszenia</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.HistoriaLogowania</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Konto</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Ogloszenie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Spotkanie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.ElementWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.KategoriaWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Nieruchomosc</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.PoziomDostepu</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypOgloszenia</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Konto</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.PoziomDostepu</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Ogloszenie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Nieruchomosc</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.ElementWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.KategoriaWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Spotkanie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypOgloszenia</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.HistoriaLogowania</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.ElementWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.KategoriaWyposazeniaNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Konto</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Nieruchomosc</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Ogloszenie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.Spotkanie</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypNieruchomosci</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.TypOgloszenia</class>
+    <class>pl.lodz.p.it.ssbd2016.ssbd01.encje.PoziomDostepu</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="masi"/>
+    </properties>
+  </persistence-unit>
+</persistence>

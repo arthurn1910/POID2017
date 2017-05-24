@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.wyswietlSzczegolyKonta"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+    
+     <ui:define name="content">
+        <h:form id="form">
+            ${msg["daneKonta.imie"]} <h:outputText value="#{wyswietlSzczegolySwojegoKontaBean.konto.imie}"/><br />
+            ${msg["daneKonta.nazwisko"]} <h:outputText value="#{wyswietlSzczegolySwojegoKontaBean.konto.nazwisko}"/><br />
+            ${msg["daneKonta.login"]} <h:outputText  value="#{wyswietlSzczegolySwojegoKontaBean.konto.login}"/><br />
+            ${msg["daneKonta.email"]}  <h:outputText  value="#{wyswietlSzczegolySwojegoKontaBean.konto.email}"/><br />
+            ${msg["daneKonta.numerTelefonu"]}  <h:outputText  value="#{wyswietlSzczegolySwojegoKontaBean.konto.telefon}"/><br />
+            ${msg["daneKonta.aktywne"]}  <h:outputText  value="#{wyswietlSzczegolySwojegoKontaBean.konto.aktywne}"/><br />
+            ${msg["daneKonta.potwierdzone"]}  <h:outputText  value="#{wyswietlSzczegolySwojegoKontaBean.konto.potwierdzone}"/><br />
+            ${msg["daneKonta.poziomyDostepu"]} <h:outputText  value="#{wyswietlSzczegolySwojegoKontaBean.pobierzPoziomy()}"/><br />
+            
+             <h:commandButton value="#{msg['komunikat.zmienHaslo']}"  action="#{wyswietlSzczegolySwojegoKontaBean.edytujSwojeHasloKonta()}"  class="edit_icon" >
+            </h:commandButton> 
+            <h:commandButton value="#{msg['komunikat.edytujDane']}" action="#{wyswietlSzczegolySwojegoKontaBean.edytujSwojeKonto()}"  class="edit_icon" >
+            </h:commandButton> 
+        </h:form>
+    </ui:define>
+</ui:composition>
+        

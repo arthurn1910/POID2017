@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.zmienHaslo"]}</h>
+    </ui:define> 
+     
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+     <ui:define name="content">
+        <h1>${msg["tytulyPrzypadkow.zmienHaslo"]}:</h1>
+        <h:form id="form">
+            ${msg["daneKonta.obecneHaslo"]}* <h:inputSecret value="#{edytujHasloBean.stareHaslo}" id ="obecneHaslo"/> <p:messages for="obecneHaslo" autoUpdate="true"/><br/>
+            ${msg["daneKonta.noweHaslo"]}*  <h:inputSecret value="#{edytujHasloBean.noweHaslo}" id="noweHaslo"/> <p:messages for="noweHaslo" autoUpdate="true"/><br />
+            ${msg["daneKonta.powtorzNoweHaslo"]}*  <h:inputSecret value="#{edytujHasloBean.nowePowtorzoneHaslo}" id="powtorzoneHaslo"/> <p:messages for="powtorzoneHaslo" autoUpdate="true"/><br />           
+            ${msg["komunikat.polaObowiazkowe"]}*<br /><br />
+            
+            <p:commandButton value="#{msg['komunikat.potwierdz']}" action="#{edytujHasloBean.zmienMojeHaslo()}">
+                <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+            </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+            <h:commandButton action="wyswietlSzczegolySwojegoKonta" value="#{msg['komunikat.powrot']}"/>
+        </h:form>
+</ui:define>
+</ui:composition>

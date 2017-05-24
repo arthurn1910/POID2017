@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+>
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.wyswietlOgloszenia"]}</h>
+    </ui:define>
+
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="listaOgloszenForm2">
+        <h:selectOneRadio value="#{wyswietlOgloszeniaBean.sortuj}">
+            <f:selectItem itemValue="cena" itemLabel="${msg['wyswietlOgloszenia.sortujWgCeny']}" />
+            <f:selectItem itemValue="dataDodania" itemLabel="${msg['wyswietlOgloszenia.sortujWgDatyDodania']}" />	
+            <f:selectItem itemValue="typOgloszenia" itemLabel="${msg['wyswietlOgloszenia.sortujWgTypuOgloszenia']}" />	
+            <f:selectItem itemValue="rynekPierwotny" itemLabel="${msg['wyswietlOgloszenia.sortujWgRynku']}" />	
+        </h:selectOneRadio>	
+        <h:commandButton value="${msg['komunikat.sortuj']}" action="#{wyswietlOgloszeniaBean.sortujOgloszenia()}"/>
+        <h:commandButton action="#{wyswietlOgloszeniaBean.odswiez()}" value="${msg['komunikat.odswiez']}" rendered="true"/>
+        <br /><br />
+        </h:form>
+        <h:form id="listaOgloszenForm">
+            <h:dataTable id="listaOgloszen" var="row" value="#{wyswietlOgloszeniaBean.ogloszeniaDataModel}">
+                <h:column id="tytul">
+                    <f:facet name="header">${msg["daneOgloszenia.tytul"]}</f:facet>
+                    <h:outputText value="#{row.tytul}" />
+                </h:column>
+                <h:column id="cena">
+                    <f:facet name="header">${msg["daneOgloszenia.cena"]}</f:facet>
+                    <h:outputText value="#{row.cena}" />
+                </h:column>
+                <h:column id="dataDodania">
+                    <f:facet name="header">${msg["daneOgloszenia.dataDodania"]}</f:facet>
+                    <h:outputText value="#{row.dataDodania}" />
+                </h:column>
+                <h:column id="typOgloszenia">
+                    <f:facet name="header">${msg["daneOgloszenia.typOgloszenia"]}</f:facet>
+                    <h:outputText value="#{msg[row.typOgloszenia.nazwa]}" />
+                </h:column>
+                <h:column id="miejscowosc">
+                    <f:facet name="header">${msg["daneOgloszenia.miejscowosc"]}</f:facet>
+                    <h:outputText value="#{row.nieruchomosc.miejscowosc}" />
+                </h:column>
+                <h:column id="rynekPierwotny">
+                    <f:facet name="header">${msg["daneOgloszenia.rynekPierwotny"]}</f:facet>
+                    <h:outputText value="#{row.rynekPierwotny}" />
+                </h:column>
+                <h:column id="wlasciciel">
+                    <f:facet name="header">${msg["daneOgloszenia.wlasciciel"]}</f:facet>
+                    <h:outputText value="#{row.idWlasciciela.login}" />
+                </h:column>
+                
+                <h:column id="aktywne">
+                    <f:facet name="header">${msg["daneOgloszenia.aktywne"]}</f:facet>
+                    <h:panelGrid columns="2">
+                        <h:selectBooleanCheckbox id="stan" value="#{row.aktywne}" disabled="true"/>    
+                        <h:outputLabel for="aktywne" value="${msg['daneOgloszenia.aktywne']}" />    
+                    </h:panelGrid>
+                </h:column>
+                    
+                <h:column id="akcje">
+                    <f:facet name="header">${msg["daneOgloszenia.akcje"]}</f:facet>
+                    <h:commandButton action="#{wyswietlOgloszeniaBean.wyswietlSzczegolyOgloszenia(row)}" value="${msg['komunikat.wyswietlSzczegolyOgloszenia']}" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

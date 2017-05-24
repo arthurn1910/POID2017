@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.wyswietlSzczegolyKonta"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+    
+     <ui:define name="content">
+        <h:form id="form">
+            ${msg["daneKonta.imie"]} <h:outputText value="#{wyswietlSzczegolyKontaBean.konto.imie}"/><br />
+            ${msg["daneKonta.nazwisko"]} <h:outputText value="#{wyswietlSzczegolyKontaBean.konto.nazwisko}"/><br />
+            ${msg["daneKonta.login"]} <h:outputText  value="#{wyswietlSzczegolyKontaBean.konto.login}"/><br />
+            ${msg["daneKonta.email"]}  <h:outputText  value="#{wyswietlSzczegolyKontaBean.konto.email}"/><br />
+            ${msg["daneKonta.numerTelefonu"]}  <h:outputText  value="#{wyswietlSzczegolyKontaBean.konto.telefon}"/><br />
+            ${msg["daneKonta.aktywne"]}  <h:outputText  value="#{wyswietlSzczegolyKontaBean.konto.aktywne}"/><br />
+            ${msg["daneKonta.potwierdzone"]}  <h:outputText value="#{wyswietlSzczegolyKontaBean.konto.potwierdzone}"/><br />
+            ${msg["daneKonta.poziomyDostepu"]} <h:outputText  value="#{wyswietlSzczegolyKontaBean.pobierzPoziomy()}"/><br />
+            
+            
+            <p:commandButton value="#{msg['komunikat.potwierdz']}" update="@form" action="#{wyswietlSzczegolyKontaBean.potwierdz()}" rendered="#{not wyswietlSzczegolyKontaBean.konto.potwierdzone and autoryzacja.czyAdministrator()}">
+                <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+            </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+            
+            <h:commandButton value="#{msg['komunikat.odblokuj']}" action="#{wyswietlSzczegolyKontaBean.odblokuj()}"  class="edit_icon" rendered="#{not wyswietlSzczegolyKontaBean.konto.aktywne and autoryzacja.czyAdministrator()}">
+            </h:commandButton> 
+            <h:commandButton value="#{msg['komunikat.zablokuj']}" action="#{wyswietlSzczegolyKontaBean.zablokuj()}"  class="edit_icon" rendered="#{wyswietlSzczegolyKontaBean.konto.aktywne and autoryzacja.czyAdministrator()}">
+            </h:commandButton> 
+            <h:commandButton value="#{msg['komunikat.modyfikujPoziomy']}" action="#{wyswietlSzczegolyKontaBean.modyfikujPoziomyDostepu()}"  class="edit_icon" rendered="#{autoryzacja.czyAdministrator()}">
+            </h:commandButton>
+            <h:commandButton value="#{msg['komunikat.zmienHaslo']}" action="#{wyswietlSzczegolyKontaBean.edytujHasloKonta()}"  class="edit_icon" rendered="#{autoryzacja.czyAdministrator()}">
+            </h:commandButton> 
+            <h:commandButton value="#{msg['komunikat.edytujDane']}" action="#{wyswietlSzczegolyKontaBean.edytujKonto()}"  class="edit_icon" rendered="#{autoryzacja.czyAdministrator()}">
+            </h:commandButton> 
+        </h:form>
+    </ui:define>
+</ui:composition>
+        

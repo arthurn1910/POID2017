@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <application>
+        <action-listener>
+            pl.lodz.p.it.ssbd2016.ssbd01.wyjatki.ExcepcionActionListener
+        </action-listener>
+        <locale-config>
+            <default-locale>pl</default-locale>
+            <supported-locale>pl</supported-locale>
+            <supported-locale>en</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>i18n.messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
+        <message-bundle>ValidationMessages</message-bundle>
+    </application>
+        
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>index.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyjatekMOS</from-outcome>
+            <to-view-id>/wyjatki/wyjatekMOS.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyszukajKonta</from-outcome>
+            <to-view-id>/mok/zalogowani/adminMenadzer/wyszukajKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>rejestracjaKontaKlienta</from-outcome>
+            <to-view-id>/mok/rejestracjaKontaKlienta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>utworzKonto</from-outcome>
+            <to-view-id>/mok/zalogowani/admin/utworzKonto.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>logowanie</from-outcome>
+            <to-view-id>/mok/logowanie.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyswietlSzczegolyKonta</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolyKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyswietlSzczegolySwojegoKonta</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolySwojegoKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+      
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>edytujDane</from-outcome>
+            <to-view-id>/mok/zalogowani/edytujDane.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/mok/edytujDane.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>powrot</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolyKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>edytujDaneKonta</from-outcome>
+            <to-view-id>/mok/zalogowani/admin/edytujDaneKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/mok/zalogowani/admin/edytujDaneKonta.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>powrot</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolyKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>przydzielAgenta</from-outcome>
+            <to-view-id>/moo/zalogowani/menadzer/przydzielAgenta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>zmienAgenta</from-outcome>
+            <to-view-id>/moo/zalogowani/menadzer/zmienAgenta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>edytujHaslo</from-outcome>
+            <to-view-id>/mok/zalogowani/edytujHaslo.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/mok/zalogowani/edytujHaslo.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>powrot</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolyKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>edytujHasloKonta</from-outcome>
+            <to-view-id>/mok/zalogowani/admin/edytujHasloKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/mok/zalogowani/admin/edytujHasloKonta.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>powrot</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolyKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>modyfikujPoziomyDostepu</from-outcome>
+            <to-view-id>/mok/zalogowani/admin/modyfikujPoziomyDostepu.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/mok/zalogowani/adminmodyfikujPoziomyDostepu.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>powrot</from-outcome>
+            <to-view-id>/mok/zalogowani/wyswietlSzczegolyKonta.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+    <!-- MOO -->
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyswietlSzczegolyOgloszenia</from-outcome>
+            <to-view-id>/moo/wyswietlSzczegolyOgloszenia.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyswietlOgloszenia</from-outcome>
+            <to-view-id>/moo/wyswietlOgloszenia.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/moo/wyswietlSzczegolyOgloszenia.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>edytujOgloszenieDanegoUzytkownika</from-outcome>
+            <to-view-id>/moo/zalogowani/klientAgent/edytujOgloszenieDanegoUzytkownika.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+        <navigation-rule>
+        <from-view-id>/moo/wyswietlSzczegolyOgloszenia.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>edytujOgloszenieInnegoUzytkownika</from-outcome>
+            <to-view-id>/moo/zalogowani/menadzer/edytujOgloszenieInnegoUzytkownika.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+
+    <!-- MOS -->
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>ulubione</from-outcome>
+            <to-view-id>/moo/ulubione.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>rezerwacjaSpotkania</from-outcome>
+            <to-view-id>/mos/zalogowani/klient/rezerwacjaSpotkania.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyswietlSpotkaniaDlaOgloszenia</from-outcome>
+            <to-view-id>/mos/zalogowani/klientAgentMenadzer/wyswietlSpotkaniaDlaOgloszenia.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/mos/zalogowani/klientAgentMenadzer/wyswietlSpotkaniaDlaOgloszenia.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>wyswietlSzczegolyOgloszenia</from-outcome>
+            <to-view-id>/moo/wyswietlSzczegolyOgloszenia.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>wyswietlMojeSpotkania</from-outcome>
+            <to-view-id>/mos/zalogowani/klientAgent/wyswietlSwojeSpotkania.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+</faces-config>

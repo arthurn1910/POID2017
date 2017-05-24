@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.przydzielAgenta"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+     <ui:define name="content">
+        <h:form id="agenci">            
+            <h:dataTable id="listaAgentow" var="agent" value="#{agentBean.agenci}">
+                <h:column id="nazwa">
+                    <f:facet name="header">#{msg['komunikat.agent']}</f:facet>
+                    <h:outputText value="#{agent.id}" />
+                </h:column>
+                <h:column id="nazwaLogin">
+                    <f:facet name="header">#{msg['komunikat.agentLogin']}</f:facet>
+                    <h:outputText value="#{agent.login}" />
+                </h:column>
+                <h:column id="akcja">
+                    <f:facet name="header">#{msg['komunikat.akcja']}</f:facet>
+                    <p:commandButton value="#{msg['komunikat.dodaj']}" update="@form" action="#{agentBean.przydzielAgenta()}" rendered="#{not agentBean.czyPosiadaJakiegosAgenta()}">
+                        <p:confirm message="#{msg['komunikat.przydzielAgenta']}" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog> 
+                </h:column>
+            </h:dataTable>
+            
+
+    
+            <h:commandButton value="#{msg['komunikat.powrot']}" action="wyswietlSzczegolyOgloszenia" />
+        </h:form>
+    </ui:define>
+</ui:composition>

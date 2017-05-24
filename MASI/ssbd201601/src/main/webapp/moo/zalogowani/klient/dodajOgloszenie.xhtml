@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.dodaj_ogloszenie"]}</h>
+    </ui:define>
+
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="content">
+        <h1>${msg["tytulyPrzypadkow.dodaj_ogloszenie"]}:</h1>
+        <h:form style="margin:8px">
+
+            ${msg["ogloszenia.tytul"]} *<h:inputText value="#{dodajOgloszenieBean.ogloszenie.tytul}" id="tytul"/><p:messages for="tytul" autoUpdate="true"/><br />
+            ${msg["ogloszenia.cena"]} *<h:inputText value="#{dodajOgloszenieBean.ogloszenie.cena}" id="cena"/> ${msg["ogloszenie.walutaPLN"]} <p:messages for="cena" autoUpdate="true"/><br />
+            ${msg["ogloszenia.rynek"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.ogloszenie.rynekPierwotny}" requiredMessage="#{msg['select.walidacja']}" id="rynek" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItem itemValue="#{true}" itemLabel="#{msg['ogloszenia.rynek_pierwotny']}" />
+                <f:selectItem itemValue="#{false}" itemLabel="#{msg['ogloszenia.rynek_wtorny']}"  />
+            </h:selectOneMenu>
+            <p:messages for="rynek" autoUpdate="true"/><br />
+
+            ${msg["ogloszenia.typ"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranyTypOgloszenia}" requiredMessage="#{msg['select.walidacja']}" id="typOgloszenia" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{typyOgloszenNieruchomosciBean.typyOgloszen}" var="typOgloszenia" itemValue="#{typOgloszenia.id}" itemLabel="#{msg[typOgloszenia.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="typOgloszenia" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.typ_nieruchomosci"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranyTypNieruchomosci}" requiredMessage="#{msg['select.walidacja']}" id="typyNieruchomosci" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{typyOgloszenNieruchomosciBean.typyNieruchomosci}" var="typNieruchomosci" itemValue="#{typNieruchomosci.id}" itemLabel="#{msg[typNieruchomosci.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="typyNieruchomosci" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.rodzaj_zabudowy"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranyRodzajZabudowy}" requiredMessage="#{msg['select.walidacja']}" id="rodzajZabudowy" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.rodzajZabudowy}" var="rodzajZabudowy" itemValue="#{rodzajZabudowy.id}" itemLabel="#{msg[rodzajZabudowy.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="rodzajZabudowy" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.material"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranyMaterial}" requiredMessage="#{msg['select.walidacja']}" id="material" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.material}" var="material" itemValue="#{material.id}" itemLabel="#{msg[material.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="material" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.poddasze"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranePoddasze}" requiredMessage="#{msg['select.walidacja']}" id="poddasze" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.poddasze}" var="poddasze" itemValue="#{poddasze.id}" itemLabel="#{msg[poddasze.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="poddasze" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.dach"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranyDach}" requiredMessage="#{msg['select.walidacja']}" id="dach" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.dach}" var="dach" itemValue="#{dach.id}" itemLabel="#{msg[dach.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="dach" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.pokrycie_dachu"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranePokrycieDachu}" requiredMessage="#{msg['select.walidacja']}" id="pokrycie_dachu" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.pokrycieDachu}" var="pokrycieDachu" itemValue="#{pokrycieDachu.id}" itemLabel="#{msg[pokrycieDachu.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="pokrycie_dachu" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.stan_wykonczenia"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranyStanWykonczenia}" requiredMessage="#{msg['select.walidacja']}" id="stan_wykonczenia" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.stanWykonczenia}" var="stanWykonczenia" itemValue="#{stanWykonczenia.id}" itemLabel="#{msg[stanWykonczenia.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="stan_wykonczenia" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.okna"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybraneOkno}" requiredMessage="#{msg['select.walidacja']}" id="okna" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.okna}" var="okno" itemValue="#{okno.id}" itemLabel="#{msg[okno.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="okna" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.polozenie"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranePolozenie}" requiredMessage="#{msg['select.walidacja']}" id="polozenie" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.polozenie}" var="polozenie" itemValue="#{polozenie.id}" itemLabel="#{msg[polozenie.nazwa]}" />
+            </h:selectOneMenu><p:messages for="polozenie" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.ogrodzenie"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybraneOgrodzenie}" requiredMessage="#{msg['select.walidacja']}" id="ogrodzenie" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.ogrodzenie}" var="ogrodzenie" itemValue="#{ogrodzenie.id}" itemLabel="#{msg[ogrodzenie.nazwa]}" />
+            </h:selectOneMenu>
+            <p:messages for="ogrodzenie" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.ogrzewanie"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybraneOgrzewanie}" requiredMessage="#{msg['select.walidacja']}" id="ogrzewanie" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.ogrzewanie}" var="ogrzewanie" itemValue="#{ogrzewanie.id}" itemLabel="#{msg[ogrzewanie.nazwa]}" />
+            </h:selectOneMenu><p:messages for="ogrzewanie" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.dojazd"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybraneDojazd}" requiredMessage="#{msg['select.walidacja']}" id="dojazd" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.dojazd}" var="dojazd" itemValue="#{dojazd.id}" itemLabel="#{msg[dojazd.nazwa]}" />
+            </h:selectOneMenu><p:messages for="dojazd" autoUpdate="true"/><br />
+
+            ${msg["nieruchomosc.okolica"]} *
+            <h:selectOneMenu value="#{dodajOgloszenieBean.wybranaOkolica}" requiredMessage="#{msg['select.walidacja']}" id="okolica" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItems value="#{kategoriaWartoscBean.okolica}" var="okolica" itemValue="#{okolica.id}" itemLabel="#{msg[okolica.nazwa]}" />
+            </h:selectOneMenu><p:messages for="okolica" autoUpdate="true"/><br />
+            <br />
+            ${msg["nieruchomosc.zabezpieczenia"]}
+            <h:selectManyListbox value="#{dodajOgloszenieBean.wybraneZabezpieczenia}">
+                <f:selectItems value="#{kategoriaWartoscBean.zabezpieczenia}" var="zabezpieczenia" itemValue="#{zabezpieczenia.id}" itemLabel="#{msg[zabezpieczenia.nazwa]}" />
+            </h:selectManyListbox>
+            <br />
+            <br />
+            ${msg["nieruchomosc.media"]}
+            <h:selectManyListbox value="#{dodajOgloszenieBean.wybraneMedia}">
+                <f:selectItems value="#{kategoriaWartoscBean.media}" var="media" itemValue="#{media.id}" itemLabel="#{msg[media.nazwa]}" />
+            </h:selectManyListbox>
+            <br />
+            <br />
+            ${msg["nieruchomosc.informacje_dodatkowe"]}
+            <h:selectManyListbox value="#{dodajOgloszenieBean.wybraneInfoDodatkowe}">
+                <f:selectItems value="#{kategoriaWartoscBean.informacjeDodatkowe}" var="informacjeDodatkowe" itemValue="#{informacjeDodatkowe.id}" itemLabel="#{msg[informacjeDodatkowe.nazwa]}" />
+            </h:selectManyListbox>
+            <br/>
+            <br />
+            ${msg["nieruchomosc.miejscowosc"]} * <h:inputText value="#{dodajOgloszenieBean.nieruchomosc.miejscowosc}" id="miejscowosc"/><p:messages for="miejscowosc" autoUpdate="true"/>  <br />
+            ${msg["nieruchomosc.ulica"]} *<h:inputText value="#{dodajOgloszenieBean.nieruchomosc.ulica}" id="ulica"/> <p:messages for="ulica" autoUpdate="true"/><br />
+            ${msg["niercuchomosc.liczba_pokoi"]} *<h:inputText value="#{dodajOgloszenieBean.nieruchomosc.liczbaPokoi}" id="liczbaPokoi"/> <p:messages for="liczbaPokoi" autoUpdate="true"/><br />
+            ${msg["nieruchomosc.liczba_pieter"]} *<h:inputText value="#{dodajOgloszenieBean.nieruchomosc.liczbaPieter}" id="liczbaPieter" /> <p:messages for="liczbaPieter" autoUpdate="true"/><br />
+            ${msg["nieruchomosc.rok_budowy"]} *<h:inputText value="#{dodajOgloszenieBean.nieruchomosc.rokBudowy}" id="rokBudowy" immediate="true">
+            <f:convertDateTime pattern="mm-yyyy" /> *</h:inputText> <p:messages for="rokBudowy" autoUpdate="true"/><br />
+            ${msg["nieruchomosc.powierzchnia_dzialki"]} *<h:inputText value="#{dodajOgloszenieBean.nieruchomosc.powierzchniaDzialki}" id="powierzchniaDzialki"/> <p:messages for="powierzchniaDzialki" autoUpdate="true"/><br />
+            ${msg["nieruchomosc.powierzchnia_nieruchomosci"]} *<h:inputText value="#{dodajOgloszenieBean.nieruchomosc.powierzchniaNieruchomosci}" id="powierzchniaNieruchomosci"/> <p:messages for="powierzchniaNieruchomosci" autoUpdate="true"/><br />
+
+            <br />
+
+            <p:commandButton value="#{msg['komunikat.potwierdz']}" action="#{dodajOgloszenieBean.dodajOgloszenie()}">
+                <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+            </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            </p:confirmDialog>
+
+            <h:button outcome="index" value="#{msg['komunikat.powrot']}"  />
+        </h:form>
+   </ui:define>
+</ui:composition>

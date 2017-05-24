@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.rezerwacjaSpotkania"]}</h>
+    </ui:define>
+    
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    
+    
+     <ui:define name="content">
+        <h:form>  
+            ${msg["spotkanie.data"]}* <p:calendar id="inline" value="#{rezerwacjaSpotkaniaBean.date}"  required="true" requiredMessage="#{msg['select.walidacja']}"/> <br />
+            <p:messages for="inline" autoUpdate="true" /><br />
+            ${msg["spotkanie.godzina"]}* <pe:timePicker id="data" value="#{rezerwacjaSpotkaniaBean.godzina}" mode="popup" widgetVar="popupTimeWidget"  
+                           label="Popup time picker"  required="true" requiredMessage="#{msg['select.walidacja']}"/>  <br/>
+            <p:messages for="data" autoUpdate="true"/><br />
+            ${msg["spotkanie.dlugosc"]}* 
+            <h:selectOneMenu value="#{rezerwacjaSpotkaniaBean.dlugosc}" requiredMessage="#{msg['select.walidacja']}" id="dlugosc" required="true">
+                <f:selectItem itemLabel="#{msg['select.wybierz']}" itemValue="#{null}" />
+                <f:selectItem itemValue="15" itemLabel="15" />
+                <f:selectItem itemValue="30" itemLabel="30"  />
+                <f:selectItem itemValue="45" itemLabel="45" />
+                <f:selectItem itemValue="60" itemLabel="60"  />
+                <f:selectItem itemValue="75" itemLabel="75" />
+                <f:selectItem itemValue="90" itemLabel="90"  />
+                <f:selectItem itemValue="105" itemLabel="105" />
+                <f:selectItem itemValue="120" itemLabel="120"  />
+            </h:selectOneMenu>${msg["spotkanie.minut"]}<br/>
+            <p:messages for="dlugosc" autoUpdate="true"/><br />
+            <p:commandButton action="#{rezerwacjaSpotkaniaBean.rezerwujSpotkanie()}" value="#{msg['komunikat.umowSpotkanie']}">
+                <p:confirm message="#{msg['komunikat.potwierdzenie']}" icon="ui-icon-alert" />
+            </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msg['komunikat.tak']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msg['komunikat.nie']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+            <h:button outcome="wyswietlSzczegolyOgloszenia" value="#{msg['komunikat.powrot']}"  />
+        </h:form>
+    </ui:define>
+</ui:composition>

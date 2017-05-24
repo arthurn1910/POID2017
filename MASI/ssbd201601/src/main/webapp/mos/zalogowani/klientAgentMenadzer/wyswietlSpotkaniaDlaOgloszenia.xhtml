@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+>
+
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.spotkania_dla_ogloszenia"]}</h>
+    </ui:define>
+
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="content">
+        <h1>${msg["tytulyPrzypadkow.spotkania_dla_ogloszenia"]}:</h1>
+        <h:form>
+            <h:dataTable id="listaSpotkan"  var="spotkanie" value="#{wyswietlSpotkaniaDlaOgloszeniaBean.spotkania}">
+                <h:column id="tytul">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.tytul"]}</f:facet>
+                    <h:outputText value="#{spotkanie.idOgloszenia.tytul}"/>
+                </h:column>
+                <h:column id="imieAgenta">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.agent_imie"]}</f:facet>
+                    <h:outputText value="#{spotkanie.idOgloszenia.idAgenta.imie}" />
+                </h:column>
+                <h:column id="nazwiskoAgenta">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.agent_nazwisko"]}</f:facet>
+                    <h:outputText value="#{spotkanie.idOgloszenia.idAgenta.nazwisko}" />
+                </h:column>
+                <h:column id="telefonAgenta">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.agent_telefon"]}</f:facet>
+                    <h:outputText value="#{spotkanie.idOgloszenia.idAgenta.telefon}" />
+                </h:column>
+                <h:column id="miejscowosc">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.miejscowosc"]}</f:facet>
+                    <h:outputText value="#{spotkanie.idOgloszenia.nieruchomosc.miejscowosc}" />
+                </h:column>
+                <h:column id="dataSpotkania">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.data_spotkania"]}</f:facet>
+                    <h:outputText value="#{spotkanie.dataSpotkania}" />
+                </h:column>
+                <h:column id="dlugoscSpotkania">
+                    <f:facet name="header">${msg["spotkaniaOgloszenia.dlugosc_spotkania"]}</f:facet>
+                    <h:outputText value="#{spotkanie.dlugoscSpotkania}" />
+                </h:column>
+            </h:dataTable>
+            <h:button outcome="wyswietlSzczegolyOgloszenia" value="#{msg['komunikat.powrot']}"  />
+        </h:form>
+   </ui:define>
+</ui:composition>

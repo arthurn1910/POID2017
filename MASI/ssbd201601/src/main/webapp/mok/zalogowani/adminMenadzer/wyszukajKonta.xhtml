@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="top">
+        <h>${msg["tytulyPrzypadkow.wyszukajKonta"]}</h>
+    </ui:define>
+
+    <ui:define name="left">
+        <ui:include src="/templates/menu.xhtml" />
+    </ui:define>
+    <ui:define name="content">
+        <h1>#{msg["wyszukiwanie.listaKont"]}</h1><br /><br />
+        <h1>#{msg["wyszukiwanie.wyszukajWedlug"]}</h1><br />
+        <h:form id="listaKontForm1">
+            ${msg["daneKonta.imie"]} <p:autoComplete id="imie" value="#{wyszukajKontaBean.imie}" completeMethod="#{wyszukajKontaBean.completeImie}" /><br />
+            ${msg["daneKonta.nazwisko"]} <p:autoComplete id="nazwisko" value="#{wyszukajKontaBean.nazwisko}" completeMethod="#{wyszukajKontaBean.completeNazwisko}" /><br />
+            ${msg["daneKonta.email"]}  <p:autoComplete id="email" value="#{wyszukajKontaBean.email}" completeMethod="#{wyszukajKontaBean.completeEmail}" /><br />
+            ${msg["daneKonta.numerTelefonu"]}  <p:autoComplete id="telefon" value="#{wyszukajKontaBean.telefon}" completeMethod="#{wyszukajKontaBean.completeTelefon}" /><br />
+            ${msg["daneKonta.aktywne"]}  <h:selectBooleanCheckbox value="#{wyszukajKontaBean.aktywne}" /><br />
+            ${msg["daneKonta.potwierdzone"]} <h:selectBooleanCheckbox value="#{wyszukajKontaBean.potwierdzone}" /><br />
+            <h:commandButton value="#{msg['komunikat.wyszukaj']}" action="#{wyszukajKontaBean.pobierzPodobneKonta()}" />
+        </h:form>
+        <h:form>
+            <h:dataTable id="listaKont1" var="konto" value="#{wyszukajKontaBean.kontaDataModel}">
+                <h:column id="imie">
+                    <f:facet name="header">${msg["daneKonta.imie"]}</f:facet>
+                    <h:outputText value="#{konto.imie}" />
+                </h:column>
+                <h:column id="nazwisko">
+                    <f:facet name="header">${msg["daneKonta.nazwisko"]}</f:facet>
+                    <h:outputText value="#{konto.nazwisko}" />
+                </h:column>
+                <h:column id="email">
+                    <f:facet name="header">${msg["daneKonta.email"]}</f:facet>
+                    <h:outputText value="#{konto.email}" />
+                </h:column>
+                <h:column id="telefon">
+                    <f:facet name="header">${msg["daneKonta.numerTelefonu"]}</f:facet>
+                    <h:outputText value="#{konto.telefon}" />
+                </h:column>
+                <h:column id="potwierdzone">
+                    <f:facet name="header">${msg["daneKonta.potwierdzone"]}</f:facet>
+                    <h:outputText value="#{konto.potwierdzone}" />
+                </h:column>
+                <h:column id="aktywne">
+                    <f:facet name="header">${msg["daneKonta.aktywne"]}</f:facet>
+                    <h:outputText value="#{konto.aktywne}" />
+                </h:column>
+                <h:column id="informacje">
+                    <h:commandButton value="#{msg['komunikat.wyswietlInformacje']}" action="#{wyszukajKontaBean.wyswietlSzczegolyKonta()}">
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

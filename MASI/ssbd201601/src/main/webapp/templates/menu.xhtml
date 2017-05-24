@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:form>
+        <h:outputText value="${msg['komunikat.potwierdzenieOperacji']}" rendered="#{menuBean.czyWyswietlicPotwierdzenie()}" />
+        <p>${msg['komunikat.powitanie']} ${menuBean.login}</p>
+        <p>${menuBean.poziomyDostepu}</p>
+
+        <h:outputLink value="#{request.contextPath}/mok/logowanie.xhtml" rendered="#{not menuBean.zalogowany}">${msg["menu.logowanie"]}</h:outputLink><br />
+        <h:outputLink value="#{request.contextPath}/mok/rejestracjaKontaKlienta.xhtml" rendered="#{not menuBean.zalogowany}">${msg["menu.rejestracjaKontaKlienta"]}</h:outputLink><br />
+        
+        <h:outputLink value="#{request.contextPath}/index.xhtml" >${msg["menu.stronaGlowna"]}</h:outputLink><br />
+        
+
+        <h:outputLink value="#{request.contextPath}/mok/zalogowani/wyswietlSzczegolySwojegoKonta.xhtml" rendered="#{autoryzacja.czyAdministrator() or autoryzacja.czyMenadzer() or autoryzacja.czyKlient() or autoryzacja.czyAgent()}">${msg["menu.szczegolyKonta"]}</h:outputLink><br />
+
+        <h:outputLink value="#{request.contextPath}/mok/zalogowani/admin/utworzKonto.xhtml" rendered="#{autoryzacja.czyAdministrator()}">${msg["menu.utorzKonto"]}</h:outputLink><br />
+        <h:outputLink value="#{request.contextPath}/mok/zalogowani/adminMenadzer/wyszukajKonta.xhtml" rendered="#{autoryzacja.czyAdministrator() or autoryzacja.czyMenadzer()}">${msg["menu.wyszukajKonta"]}</h:outputLink><br />
+        
+        <h:outputLink value="#{request.contextPath}/mok/zalogowani/admin/historiaLogowaniaRaport.xhtml" rendered="#{autoryzacja.czyAdministrator()}">${msg["menu.generuj.raport"]}</h:outputLink><br />
+        
+        <h:outputLink value="#{request.contextPath}/moo/wyswietlOgloszenia.xhtml" rendered="true">${msg["menu.wyswietlOgloszenia"]}</h:outputLink><br />
+        <h:outputLink value="#{request.contextPath}/moo/zalogowani/klient/dodajOgloszenie.xhtml" rendered="#{autoryzacja.czyKlient()}">${msg["menu.dodaj_ogloszenie"]}</h:outputLink><br />
+        <h:outputLink value="#{request.contextPath}/mos/zalogowani/klientAgent/wyswietlSwojeSpotkania.xhtml" rendered="#{autoryzacja.czyKlient() or autoryzacja.czyAgent()}">${msg["menu.spotkania_wyswietl"]}</h:outputLink><br />
+
+        <h:commandButton value="#{msg['komunikat.wyloguj']}" action="#{menuBean.wyloguj()}" rendered="#{menuBean.zalogowany}"/>
+
+    </h:form>
+</ui:composition>
