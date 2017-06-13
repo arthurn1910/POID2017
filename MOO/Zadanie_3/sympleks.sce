@@ -147,13 +147,27 @@ function count(f,A,b,c,d,e)
        disp('Tablica 3')
             disp(t) 
             
-      disp('Punkt Optimum:')
-      for z=1: variables
-          
-          disp(t(z+((size(t, "c")-1)*(size(t, "r")))))
-      end;
+      flag=0;
       
-      disp(t((size(t, "c")*size(t, "r"))))
+      for u=1 : variables+equations+1
+          if t(u*(size(t, "r")))< 0 then
+              flag=1;
+          end;
+      end
+      
+      if flag==1 then
+          disp("brak rozwiązań")
+      else
+          disp('Punkt Optimum:')
+        for z=1: variables
+              
+              disp(t(z+((size(t, "c")-1)*(size(t, "r")))))
+          end;
+          
+          disp(t((size(t, "c")*size(t, "r"))))
+      end
+      
+      
        
            
            
@@ -168,6 +182,6 @@ function count(f,A,b,c,d,e)
 
 endfunction
 
- zadanie3Moo(3);
+ zadanie3Moo(2);
  
 

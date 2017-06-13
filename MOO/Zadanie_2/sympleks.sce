@@ -1,7 +1,4 @@
-currentDirectory = get_absolute_file_path("sympleks.sce");
-exec(currentDirectory + "\utils.sce");
-
-function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterations,precision)
+function [1]=Zadanie3(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterations,precision)
    
     /*rangeXMin=-2;
     rangeXMax=2;
@@ -25,6 +22,10 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
     rangeX=rangeXMax-rangeXMin;
     rangeY=rangeYMax-rangeYMin;
    
+   
+   xVector=[]
+   yVector=[]
+   zVector=[]
         
     scf();
     
@@ -132,6 +133,7 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
     //mprintf("\n z: %f \n", list(feval(x,y,f)))
     //plot3d(x,y,list(feval(x,y,f)))
     
+      
             
     while currentIteration <= maxIterations 
         if(sqrt((xh-xl)^2+(yh-yl)^2)>precision) then
@@ -159,8 +161,11 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
                 yd=yr;
                 zd=zr;    
             end
-                       
-
+            xVector=[xVector xl]
+            yVector=[yVector yl]
+            zVector=[zVector zl]           
+            
+            
             mprintf("\nIteracja: %i. Punkt l: [ %f : %f ] Wartosc: %f. Punkt d: [ %f : %f] Wartosc: %f. Punkt h: [ %f : %f ] Wartosc: %f.\n\n\n",currentIteration,xl,yl,zl,xd,yd,zd,xh,yh,zh);
            //  Punkt 4       
             xs=(xl+xd)/2;
@@ -248,6 +253,16 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
         end
         currentIteration=currentIteration+1;
     end
+
+    scatter3(xVector,yVector, zVector, ".");
     currentIteration=currentIteration-1;
     mprintf("Ostateczny zneleziony punkt (%f,%f,%f) w iteracji: %i",xl, yl,zl,currentIteration); 
+    /*t = 1:200
+x = t .* cos(t) .* sin(t)
+y = t .* sin(t) .* sin(t)
+z = t .* cos(t)
+// create 3D scatter plot
+scatter3(x, y, z)*/
+// modify rotation angles
+gca().rotation_angles = [60, 45];
 endfunction
