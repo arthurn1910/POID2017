@@ -41,7 +41,7 @@ public class MenuBean {
     public void initModel() {
         String login = getContext().getRemoteUser();
         if (login != null) {
-            uzytkownikSession.zapiszIP(login);
+            //uzytkownikSession.zapiszIP(login);
             Konto konto = uzytkownikSession.znajdzPoLoginie(login);
             this.login = konto.getLogin();
             poziomyDostepu = "";
