@@ -87,7 +87,7 @@ void Player::generateSoundMultiSample(Fourier *fourier)
     std::vector<double> sequenceAmplitude = fourier->getSequenceAmplitude();
 
     double windowSize = fourier->windowSizeMulti;
-    double dataSize = sequenceFrequency.at(sequenceFrequency.size() - 1);
+    //double dataSize = sequenceFrequency.at(sequenceFrequency.size() - 1);
 
     int amplitudeAccuracy = 16;
     int amplitudeWidth = windowSize / amplitudeAccuracy;
@@ -115,6 +115,23 @@ void Player::generateSoundMultiSample(Fourier *fourier)
     updateGeneratedChart();
 }
 
+void Player::generateSound(Filter *filter)
+{
+    soundByteArray.clear();
+
+    soundByteArray.append(soundHeaderByteArray);
+
+    QVector<qint16> soundData = filter->getSoundData();
+
+    for (int i = 0; i < soundData.size(); i++) {
+        qint16 value = soundData.at(i);
+        soundByteArray.append(QByteArray::fromRawData((const char*)&value, 2));
+    }
+
+    qint32 dataSize = soundData.size() * 2;
+    soundByteArray.replace(40, 4, QByteArray::fromRawData((const char*)&dataSize, 4));
+}
+
 void Player::initGeneratedChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis)
 {
     generatedSeries = lineSeries;
@@ -137,19 +154,21 @@ void Player::updateGeneratedChart()
     int offset;
     int samples = generatedSound.size() * (1.0 / generatedMagnitude);
 
-    if (samples > 400) {
-        offset = samples / 400;
+    if (samples > 5000) {
+        offset = samples / 5000;
     } else {
         offset = 1;
     }
 
+    QList<QPointF> pointList;
     for (int i = minX * sampleRate; i < maxX * sampleRate; i += offset) {
-        generatedSeries->append(i / sampleRate, generatedSound.at(i));
+        pointList.append(QPointF(i / sampleRate, generatedSound.at(i)));
         if (generatedSound.at(i) > maxY)
             maxY = generatedSound.at(i);
         else if (generatedSound.at(i) < minY)
             minY = generatedSound.at(i);
     }
+    generatedSeries->replace(pointList);
 
     generatedXAxis->setMin(minX);
     generatedXAxis->setMax(maxX);

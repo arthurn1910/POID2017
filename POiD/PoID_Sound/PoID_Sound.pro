@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     datasource.cpp \
     amdf.cpp \
     fourier.cpp \
-    player.cpp
+    player.cpp \
+    filter.cpp
 
 RESOURCES += qml.qrc
 
@@ -37,4 +38,5 @@ HEADERS += \
     amdf.h \
     fourier.h \
     persistence1d/persistence1d.hpp \
-    player.h
+    player.h \
+    filter.h

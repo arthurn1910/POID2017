@@ -42,7 +42,6 @@ void DataSource::loadSoundData(QString path)
 void DataSource::updateInputChart()
 {
     qDebug() << "Updating input chart";
-    inputSeries->clear();
     double sampleRate = getSampleRate();
 
     double minY = 0;
@@ -50,22 +49,25 @@ void DataSource::updateInputChart()
     double minX = inputOffset * inputDurationInSeconds * (1.0 / inputMagnitude);
     double maxX = minX + inputDurationInSeconds * (1.0 / inputMagnitude);
 
-    int offset;
+    int offset = 1;
     int samples = inputData.size() * (1.0 / inputMagnitude);
 
-    if (samples > 400) {
-        offset = samples / 400;
+    if (samples > 5000) {
+        offset = samples / 5000;
     } else {
         offset = 1;
     }
 
+    QList<QPointF> pointList;
     for (int i = minX * sampleRate; i < maxX * sampleRate; i += offset) {
-        inputSeries->append(i / sampleRate, inputData.at(i));
+        pointList.append(QPointF(i / sampleRate, inputData.at(i)));
         if (inputData.at(i) > maxY)
             maxY = inputData.at(i);
         else if (inputData.at(i) < minY)
             minY = inputData.at(i);
     }
+
+    inputSeries->replace(pointList);
 
     inputXAxis->setMin(minX);
     inputXAxis->setMax(maxX);

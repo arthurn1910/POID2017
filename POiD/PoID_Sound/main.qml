@@ -9,6 +9,7 @@ import DataSource 0.1
 import Amdf 0.1
 import Fourier 0.1
 import Player 0.1
+import Filter 0.1
 
 ApplicationWindow {
     visible: true
@@ -57,7 +58,7 @@ ApplicationWindow {
                 Button {
                     id: openFileButton
                     text: "Open new file"
-                    visible: false
+                    visible: true
                     background: Rectangle {
                         implicitWidth: 100
                         implicitHeight: 40
@@ -103,6 +104,7 @@ ApplicationWindow {
                     nameFilters: [ "Music files (*.wav)", "All files (*)" ]
                     selectedNameFilter: "Music files (*.wav)"
                     onAccepted: {
+                        data.loadSoundHeader(fileDialog.fileUrl)
                         data.loadSoundData(fileDialog.fileUrl)
                         fileName.text = fileDialog.fileUrl
                         content.visible = true
@@ -160,6 +162,15 @@ ApplicationWindow {
                     player.setAudioHeader(data)
                     amdf.setData(data)
                     fourier.setData(data)
+                    filter.setData(data)
+                }
+            }
+
+            Filter {
+                id:filter
+                Component.onCompleted: {
+                    var filterSeries = filterChart.createSeries(ChartView.SeriesTypeLine, "Input", filterXAxis, filterYAxis);
+                    filter.initFilterChart(filterSeries, filterXAxis, filterYAxis)
                 }
             }
 
@@ -307,6 +318,9 @@ ApplicationWindow {
                     id: bar
                     width: parent.width
                     TabButton {
+                        text: qsTr("FILTER")
+                    }
+                    TabButton {
                         text: qsTr("AMDF")
                     }
                     TabButton {
@@ -324,6 +338,85 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.top: bar.bottom
                     anchors.bottom: parent.bottom
+
+                    Item {
+                        id: filterStackLayout
+                        anchors.fill: parent
+
+                        ChartView {
+                            id: filterChart
+                            title: "FILTER"
+                            antialiasing: true
+                            legend.visible: false
+
+                            width: parent.width * 0.87
+                            height: parent.height * 0.96
+
+                            ValueAxis {
+                                id: filterYAxis
+                            }
+
+                            ValueAxis {
+                                id: filterXAxis
+                            }
+                        }
+
+                        Item {
+                            id: filterChartNavi
+                            anchors.left: filterChart.right
+                            anchors.top: filterChart.top
+
+                            anchors.leftMargin: parent.height * 0.02
+                            anchors.topMargin: parent.height * 0.03
+
+                            height: parent.height * 0.4
+
+                            Row {
+                                id: filterMagnitudeRow
+                                anchors.left: parent.left
+                                anchors.top: parent.top
+
+                                anchors.bottomMargin: parent.height * 0.05
+
+                                spacing: 6
+                                Button {
+                                    text: " + "
+                                    background: Rectangle {
+                                        color: parent.down ? "#999999" : "#DDDDDD"
+                                    }
+                                    onClicked: {
+                                        filter.increaseFilterMagnitude()
+                                    }
+                                }
+                                Button {
+                                    text: " -- "
+                                    background: Rectangle {
+                                        color: parent.down ? "#999999" : "#DDDDDD"
+                                    }
+                                    onClicked: {
+                                        filter.decreaseFilterMagnitude()
+                                    }
+                                }
+                            }
+
+                            Slider  {
+                                id: filterOffsetSlider
+                                anchors.left: parent.left
+                                anchors.top: filterMagnitudeRow.bottom
+
+                                width: filterMagnitudeRow.width
+                                anchors.topMargin: parent.width * 0.1
+                                anchors.rightMargin: parent.width * 0.1
+
+                                from: 0
+                                value: 0
+                                to: 1
+                                onValueChanged: {
+                                    filter.filterOffsetChanged(position)
+                                }
+                            }
+                        }
+                    }
 
                     Item {
                         id: amdfStackLayout
@@ -588,6 +681,9 @@ ApplicationWindow {
                     width: parent.width
 
                     TabButton {
+                        text: "Filter"
+                    }
+                    TabButton {
                         text: "Single tone"
                     }
                     TabButton {
@@ -601,6 +697,448 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     currentIndex: toolsBar.currentIndex
+
+                    Item {
+                        id: filterTool
+                        anchors.fill: parent
+
+                        Item {
+                            id: filterWindowNRow
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: filterWindowLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "Window size (N): "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: filterWindowLabel.right
+
+                                anchors.leftMargin: parent.height * 0.02
+
+                                height: parent.height * 1
+                                width: filterTool.width * 0.1
+
+                                TextInput {
+                                    id: filterWindowValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "1024"
+                                    onTextChanged: {
+                                        filter.windowParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: filterWindowMRow
+                            anchors.left: parent.left
+                            anchors.top: filterWindowNRow.bottom
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: filterWindowMLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "Window size (M): "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: filterWindowMLabel.right
+
+                                anchors.leftMargin: parent.height * 0.02
+
+                                height: parent.height * 1
+                                width: filterTool.width * 0.1
+
+                                TextInput {
+                                    id: filterWindowMValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "512"
+                                    onTextChanged: {
+                                        filter.windowMParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: filterHopsizeRow
+                            anchors.left: parent.left
+                            anchors.top: filterWindowMRow.bottom
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: filterHopsizeLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "Hop-size (R): "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: filterHopsizeLabel.right
+
+                                anchors.leftMargin: parent.height * 0.02
+
+                                height: parent.height * 1
+                                width: filterTool.width * 0.1
+
+                                TextInput {
+                                    id: filterHopsizeValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "512"
+                                    onTextChanged: {
+                                        filter.hopsizeParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: filterFCRow
+                            anchors.left: parent.left
+                            anchors.top: filterHopsizeRow.bottom
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: filterFCLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "f_c: "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: filterFCLabel.right
+
+                                anchors.leftMargin: parent.height * 0.02
+
+                                height: parent.height * 1
+                                width: filterTool.width * 0.1
+
+                                TextInput {
+                                    id: filterFCValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "500"
+                                    onTextChanged: {
+                                        filter.fcParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: filterLengthRow
+                            anchors.left: parent.left
+                            anchors.top: filterFCRow.bottom
+                            anchors.leftMargin: parent.width * 0.02
+                            anchors.topMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+
+                            height: parent.height * 0.05
+
+                            Text {
+                                id: filterLengthLabel
+
+                                anchors.left: parent.left
+
+                                font.pointSize: 10
+                                text: "(L): "
+                            }
+
+                            Rectangle {
+                                border.color: "black"
+                                border.width: 1
+
+                                anchors.left: filterLengthLabel.right
+
+                                anchors.leftMargin: parent.height * 0.02
+
+                                height: parent.height * 1
+                                width: filterTool.width * 0.1
+
+                                TextInput {
+                                    id: filterLengthValue
+                                    anchors.fill: parent
+                                    anchors.leftMargin: parent.height * 0.1
+                                    anchors.rightMargin: parent.height * 0.1
+                                    anchors.topMargin: parent.height * 0.1
+                                    anchors.bottomMargin: parent.height * 0.1
+
+                                    text: "512"
+                                    onTextChanged: {
+                                        filter.filterLengthParam = text
+                                    }
+                                }
+                            }
+                        }
+
+                        ButtonGroup {
+                            buttons: filterColumn.children
+                            onClicked: filter.setWindowType(button.text)
+                        }
+                        Column {
+                            id: filterColumn
+                            anchors.top: filterLengthRow.bottom
+                            anchors.left: parent.left
+                            height: parent.height * 0.3
+                            width: parent.width * 0.6
+
+                            anchors.leftMargin: parent.width * 0.05
+                            spacing: -10
+
+                            Label {
+                                text: qsTr("Window:")
+                            }
+
+                            RadioButton {
+                                checked: true
+                                text: qsTr("Rectangle")
+                            }
+
+                            RadioButton {
+                                text: qsTr("von Hann")
+                            }
+
+                            RadioButton {
+                                text: qsTr("Hamming")
+                            }
+                        }
+
+                        Item {
+                            id: equalizer
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.top: filterColumn.bottom
+                            anchors.bottom: parent.bottom
+
+                            Rectangle {
+                                anchors.fill: parent
+                                border.color: "black"
+                                border.width: 1
+                            }
+
+                            Text {
+                                text: "20 Hz"
+                                anchors.bottom: slider20hz.top
+                                anchors.left: slider20hz.left
+                                anchors.leftMargin: slider20hz.width * 0.2
+                            }
+
+                            Slider {
+                                id: slider20hz
+
+                                anchors.left: parent.left
+                                anchors.bottom: parent.bottom
+
+                                height: parent.height * 0.8
+
+                                orientation: Qt.Vertical
+                                stepSize: 1
+                                from: -4
+                                to: 4
+                                value: 0
+                            }
+
+                            Text {
+                                text: "80 Hz"
+                                anchors.bottom: slider80hz.top
+                                anchors.left: slider80hz.left
+                                anchors.leftMargin: slider80hz.width * 0.2
+                            }
+
+                            Slider {
+                                id: slider80hz
+
+                                anchors.left: slider20hz.right
+                                anchors.bottom: parent.bottom
+
+                                height: parent.height * 0.8
+
+                                orientation: Qt.Vertical
+                                stepSize: 1
+                                from: -4
+                                to: 4
+                                value: 0
+                            }
+
+                            Text {
+                                text: "320 Hz"
+                                anchors.bottom: slider320hz.top
+                                anchors.left: slider320hz.left
+                                anchors.leftMargin: slider320hz.width * 0.2
+                            }
+
+                            Slider {
+                                id: slider320hz
+
+                                anchors.left: slider80hz.right
+                                anchors.bottom: parent.bottom
+
+                                height: parent.height * 0.8
+
+                                orientation: Qt.Vertical
+                                stepSize: 1
+                                from: -4
+                                to: 4
+                                value: 0
+                            }
+
+                            Text {
+                                text: "1280 Hz"
+                                anchors.bottom: slider1280hz.top
+                                anchors.left: slider1280hz.left
+                                anchors.leftMargin: slider1280hz.width * 0.2
+                            }
+
+                            Slider {
+                                id: slider1280hz
+
+                                anchors.left: slider320hz.right
+                                anchors.bottom: parent.bottom
+
+                                height: parent.height * 0.8
+
+                                orientation: Qt.Vertical
+                                stepSize: 1
+                                from: -4
+                                to: 4
+                                value: 0
+                            }
+
+                            Text {
+                                text: "5120 Hz"
+                                anchors.bottom: slider5120hz.top
+                                anchors.left: slider5120hz.left
+                                anchors.leftMargin: slider5120hz.width * 0.2
+                            }
+
+                            Slider {
+                                id: slider5120hz
+
+                                anchors.left: slider1280hz.right
+                                anchors.bottom: parent.bottom
+
+                                height: parent.height * 0.8
+
+                                orientation: Qt.Vertical
+                                stepSize: 1
+                                from: -4
+                                to: 4
+                                value: 0
+                            }
+
+                            Button {
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.rightMargin: parent.width * 0.02
+                                anchors.bottomMargin: parent.width * 0.02
+                                text: "Equalizer"
+                                onClicked: {
+                                    filter.runEqualizer(slider20hz.value, slider80hz.value, slider320hz.value, slider1280hz.value, slider5120hz.value)
+                                    filterPlayButton.visible = true
+                                }
+                            }
+                        }
+
+                        Button {
+                            id: filterButton
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.rightMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+                            text: "Filter"
+                            onClicked: {
+                                filter.runFilter()
+                                filterPlayButton.visible = true
+                            }
+                        }
+
+                        Button {
+                            id: filterSplotButton
+                            anchors.right: parent.right
+                            anchors.top: filterButton.bottom
+                            anchors.rightMargin: parent.width * 0.02
+                            anchors.bottomMargin: parent.width * 0.02
+                            text: "Filter splot"
+                            onClicked: {
+                                filter.runFilterSplot()
+                                filterPlayButton.visible = true
+                            }
+                        }
+
+                        Button {
+                            id: filterPlayButton
+                            visible: false
+                            anchors.right: parent.right
+                            anchors.top: filterSplotButton.bottom
+                            anchors.rightMargin: parent.width * 0.02
+                            text: "Play"
+                            onClicked: {
+                                player.generateSound(filter)
+                                player.play()
+                            }
+                        }
+                    }
 
                     Item {
                         id: singleToneTools

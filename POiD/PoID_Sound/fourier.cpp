@@ -212,18 +212,19 @@ void Fourier::updateFourierChart()
     int offset;
     int samples = dataSize * (1.0 / fourierMagnitude);
 
-    if (samples > 600) {
-        offset = samples / 600;
+    if (samples > 5000) {
+        offset = samples / 5000;
     } else {
         offset = 1;
     }
 
+    QList<QPointF> pointList;
     for (int i = minX * dataSize; i < maxX * dataSize; i += offset) {
-        //qDebug() << (44100.0 / (dataSize * 2)) * i << ", " << fourierAmplitudeData.at(i);
-        fourierSeries->append(i / dataSize, fourierAmplitudeData.at(i));
+        pointList.append(QPointF(i / dataSize, fourierAmplitudeData.at(i)));
         if (fourierAmplitudeData.at(i) > maxY)
             maxY = fourierAmplitudeData.at(i);
     }
+    fourierSeries->replace(pointList);
 
     fourierXAxis->setMin(minX);
     fourierXAxis->setMax(maxX);

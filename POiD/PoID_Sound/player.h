@@ -12,6 +12,7 @@
 
 #include "datasource.h"
 #include "fourier.h"
+#include "filter.h"
 
 class Player : public QObject
 {
@@ -23,6 +24,7 @@ public:
     Q_INVOKABLE void setData(DataSource *data);
     Q_INVOKABLE void generateSoundSample(QString frequencyString, QString amplitudeString);
     Q_INVOKABLE void generateSoundMultiSample(Fourier *fourier);
+    Q_INVOKABLE void generateSound(Filter *filter);
 
     Q_INVOKABLE void initGeneratedChart(QLineSeries *lineSeries, QValueAxis *xAxis, QValueAxis *yAxis);
     Q_INVOKABLE void increaseGeneratedMagnitude();

@@ -34,18 +34,19 @@ void Amdf::updateAmdfChart()
     int offset;
     int samples = dataSize * (1.0 / amdfMagnitude);
 
-    if (samples > 600) {
-        offset = samples / 600;
+    if (samples > 5000) {
+        offset = samples / 5000;
     } else {
         offset = 1;
     }
 
-
+    QList<QPointF> pointList;
     for (int i = minX * dataSize; i < maxX * dataSize; i += offset) {
-        amdfSeries->append(i / dataSize, amdfData.at(i));
+        pointList.append(QPointF(i / dataSize, amdfData.at(i)));
         if (amdfData.at(i) > maxY)
             maxY = amdfData.at(i);
     }
+    amdfSeries->replace(pointList);
 
     amdfXAxis->setMin(minX);
     amdfXAxis->setMax(maxX);
