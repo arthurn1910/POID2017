@@ -26,15 +26,15 @@ public class PoziomDostepuManager {
      * @throws javax.naming.NamingException
      */
     public PoziomDostepuManager() throws NamingException{    
-        poziomyDostepu = dodajPoziomyDostepu();
-        poprawneKombinacjePoziomowDostepu = dodajPoprawneKombinacjePoziomowDostepu();
+//        poziomyDostepu = dodajPoziomyDostepu();
+//        poprawneKombinacjePoziomowDostepu = dodajPoprawneKombinacjePoziomowDostepu();
     }
     
     /**
      * Metoda definiująca poziomy dostępu
      * @return      lista nazw poziomu dostepu
      */
-    private List<String> dodajPoziomyDostepu() throws NamingException{
+    public List<String> dodajPoziomyDostepu() throws NamingException{
         List<String> nowePoziomy;
         String poziomyDostepuDoParsowania = null;
         Context ctx = new InitialContext();
@@ -71,9 +71,9 @@ public class PoziomDostepuManager {
      * @throws pl.lodz.p.it.ssbd2016.ssbd01.wyjatki.WyjatekSystemu
      */
     public PoziomDostepu stworzPoziomDostepu(String poziom) throws WyjatekSystemu{
-        if (!poziomyDostepu.contains(poziom)) {
-            throw new WyjatekSystemu("blad.poziomDostepuNieIstnieje"+poziom,"MOK");
-        }
+//        if (!poziomyDostepu.contains(poziom)) {
+//            throw new WyjatekSystemu("blad.poziomDostepuNieIstnieje"+poziom,"MOK");
+//        }
 
         PoziomDostepu nowyPoziomDostepu = new PoziomDostepu();
         nowyPoziomDostepu.setPoziom(poziom);
