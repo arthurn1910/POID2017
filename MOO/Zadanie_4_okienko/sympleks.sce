@@ -1,4 +1,4 @@
-function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterations,precision)
+function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterations,precision,penaltyEquation)
    
     /*rangeXMin=-2;
     rangeXMax=2;
@@ -29,7 +29,7 @@ function sympleks(equation, rangeXMin, rangeXMax,rangeYMin, rangeYMax,maxIterati
         
     scf();
     
-    deff('[z]=f(x,y)', 'z='+equation)
+    deff('[z]=f(x,y,p)', 'z='+equation+"-log("+penaltyEquation+")/0.01")
     xp1=6.615244;
     yp1=5.135672;
     x=xp1;

@@ -48,7 +48,7 @@ function processButton_callback(handles)
     penaltyEquation = handles.penaltyValue.string;
     penaltyEquation = convstr(penaltyEquation, "l");
     
-    stringEquation = strcat([stringEquation, penaltyEquation])
+    //stringEquation = strcat([stringEquation, penaltyEquation])
     
     rangeYMin = strtod(handles.rangeYMin.string);
     rangeYMax = strtod(handles.rangeYMax.string);
@@ -70,7 +70,7 @@ function processButton_callback(handles)
     //    return;
     //end
     
-    sympleks(stringEquation, rangeYMin, rangeYMax, rangeYMin, rangeYMax,maxIterations,precision);
+    sympleks(stringEquation, rangeYMin, rangeYMax, rangeYMin, rangeYMax,maxIterations,precision,penaltyEquation);
 
 endfunction
 
